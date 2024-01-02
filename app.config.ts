@@ -2,6 +2,9 @@ export default defineAppConfig({
   ui: {
     card: {
       mobile: {
+        padding: 'px-2 py-3 sm:p-7', // 원하는 패딩 값으로 변경
+      },
+      body: {
         padding: 'px-2 py-3 sm:p-4', // 원하는 패딩 값으로 변경
       },
     },    

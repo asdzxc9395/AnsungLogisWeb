@@ -8,11 +8,12 @@ useHead({
   ],
 });
 
+const layout = "layout";
 </script>
 
 <template>
   <NuxtLayout>
-    <NuxtPage class="sm:px-2 md:px-2 lg:px-2 max-w-full flex-auto"/>
+    <NuxtPage class="sm:px-4 py-4 md:px-4 py-4 lg:px-4 py-4 max-w-full flex-auto"/>
   </NuxtLayout>
 </template>
 

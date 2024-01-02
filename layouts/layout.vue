@@ -1,5 +1,6 @@
 <template>
   <div class="flex bg-slate-100">
+    <div>123123</div>
     <WebHeader />
     <slot />
   </div>
@@ -18,4 +19,5 @@ const logout = () => {
   logUserOut();
   router.push('/login');
 };
+
 </script>
