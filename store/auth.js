@@ -1,10 +1,5 @@
-
 import { defineStore } from 'pinia';
-
-interface UserPayloadInterface {
-  username: string;
-  password: string;
-}
+import axios from "axios";
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -12,22 +7,26 @@ export const useAuthStore = defineStore('auth', {
     loading: false,
   }),
   actions: {
-    async authenticateUser({ username, password }: UserPayloadInterface) {
+    async authenticateUser({ username, password }) {
+    try {
       // useFetch from nuxt 3
-      const { data, pending }: any = await useFetch('https://dummyjson.com/auth/login', {
-        method: 'post',
-        headers: { 'Content-Type': 'application/json' },
-        body: {
-          username,
-          password,
+      const { data, status } = await axios.post('https://ansunglogis.co.kr:20004/srm/user/login', {
+        useR_CD: username,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
         },
-      });
-      this.loading = pending;
+      })
+      // this.loading = pending;
 
-      if (data.value) {
+      if (status === 201) {
         const token = useCookie('token'); // useCookie new hook in nuxt 3
-        token.value = data?.value?.token; // set token to cookie
+        token.value = data.data.tokenVal; // set token to cookie
         this.authenticated = true; // set authenticated  state value to true
+      }
+        
+      } catch (error) {
+        console.log(error)
       }
     },
     logUserOut() {

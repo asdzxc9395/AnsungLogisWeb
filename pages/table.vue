@@ -49,8 +49,19 @@ const people = [{
   email: 'floyd.miles@example.com',
   role: 'Member'
 }]
-
+const tabItems = [{
+  id: 1,
+  name: 'Overview',
+},{
+  id: 2,
+  name: 'DashBoard',
+}]
 const selected = ref([people[1]])
+const selectedTab = ref(tabItems[1])
+const selectTab = (tab: any) => {
+  console.log(tab)
+  selectedTab.value = tab;
+}
 </script>
 
 <template>
@@ -63,6 +74,41 @@ const selected = ref([people[1]])
       <div class="">
         <UInput color="blue" v-model="value" size="xs"/>
       </div>
+    </div>
+    <div>
+      <div class="border-b border-b-gray-200">
+        <ul class="-mb-px flex items-center gap-4 text-sm font-medium" >
+          <li 
+            v-for="item in tabItems" 
+            :key="item.id"
+          >
+            <a
+              @click="selectTab(item)"
+              :class="[
+                'px-8',
+                selectedTab.id === item.id ?
+                'relative flex items-center justify-center gap-2 px-1 py-3 text-blue-700 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-700'
+                :
+                'flex items-center justify-center text-gray-500 px-1 py-3'
+              ]"
+            >
+              {{ item.name }}
+            </a>
+          </li>
+          <!-- <li class="flex-1">
+            <a
+            >
+              Profile
+            </a>
+          </li>
+          <li class="flex-1">
+            <a class="flex items-center justify-center gap-2 px-1 py-3 text-gray-500 hover:text-blue-700">
+              Preferences
+            </a>
+          </li> -->
+        </ul>
+      </div>
+          
     </div>
   </UCard>
   <UTable 

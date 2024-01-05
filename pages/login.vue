@@ -2,22 +2,18 @@
   <NuxtLayout :name="'login'">
     <UContainer :ui="{ constrained: 'max-w-sm' }">
       <div class="py-10">
-        <UForm
-          :validate="validate"
-          key=""
-          :state="state"
-          @click="onSubmit"
-          class="space-y-4"
-        >
+        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
           <UFormGroup label="Email" name="email">
-            <UInput size="lg" v-model="state.username" />
+            <UInput v-model="state.username" placeholder="1234"/>
           </UFormGroup>
 
           <UFormGroup label="Password" name="password">
-            <UInput size="lg" v-model="state.password" type="password" />
+            <UInput v-model="state.password" type="password" />
           </UFormGroup>
 
-          <UButton size="lg" type="submit" block>Submit</UButton>
+          <UButton type="submit">
+            Submit
+          </UButton>
         </UForm>
       </div>
     </UContainer>
@@ -37,21 +33,21 @@ const { authenticated } = storeToRefs(useAuthStore()); // make authenticated sta
 const router = useRouter();
 
 const state = reactive({
-  username: 'kminchelle',
-  password: '0lelplR'
+  username: '',
+  password: ''
 })
 
 const validate = (state: any): FormError[] => {
   const errors = []
-  if (!state.email) errors.push({ path: "email", message: 'Required' })
-
+  if (!state.username) errors.push({ path: "email", message: 'Required' })
   if (!state.password) errors.push({ path: "password", message: "Required" })
   return errors
 };
-
+  
 async function onSubmit(event: FormSubmitEvent<any>) {
   await authenticateUser(state); // call authenticateUser and pass the user object
   // redirect to homepage if user is authenticated
+  // console.log(authenticated)
   if (authenticated) {
     router.push('/');
   }
