@@ -19,7 +19,7 @@ export default defineNuxtConfig({
         title: process.env.APP_NAME
     }
   },
-  // css: ['@/assets/css/main.css'],
+  css: ['~/assets/css/main.css'],
   // postcss: {
   //     plugins: {
   //         // tailwindcss: {},
@@ -29,8 +29,10 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
     "@nuxtjs/tailwindcss",
-    '@pinia/nuxt',
-],  
+    '@pinia/nuxt'
+  ],
+  plugins: [
+  ]  
   // components: [
   //   {
   //     path: '~/components',

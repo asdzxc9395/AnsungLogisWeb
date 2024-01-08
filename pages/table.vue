@@ -5,13 +5,29 @@
   @Last Modified by: [채진호]
   @Last Modified time: [2023-11-03]
 -->
-<script setup lang="ts">
-import { Bar } from 'vue-chartjs'
-import { ref, onMounted } from 'vue';
+<script setup>
+import { ref, onMounted, watchEffect, defineComponent } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 const value = ref('')
+
+const columns = [{
+  key: 'id',
+  label: 'ID'
+}, {
+  key: 'name',
+  label: 'Name'
+}, {
+  key: 'title',
+  label: 'Title'
+}, {
+  key: 'email',
+  label: 'Email'
+}, {
+  key: 'role',
+  label: 'Role'
+}]
 const people = [{
   id: 1,
   name: 'Lindsay Walton',
@@ -49,6 +65,7 @@ const people = [{
   email: 'floyd.miles@example.com',
   role: 'Member'
 }]
+
 const tabItems = [{
   id: 1,
   name: 'Overview',
@@ -58,72 +75,145 @@ const tabItems = [{
 }]
 const selected = ref([people[1]])
 const selectedTab = ref(tabItems[1])
-const selectTab = (tab: any) => {
-  console.log(tab)
+const selectTab = (tab) => {
   selectedTab.value = tab;
+  render(tab.id);
 }
+
+const activeSlide = ref(1);
+const render = (slideIndex) => {
+  activeSlide.value = slideIndex;
+};
+
+if(process.client) {
+  watchEffect(() => {
+    let gapWidth =  activeSlide.value == 1 ? '0' : '256';
+    const transformValue = `translate(calc(-${(activeSlide.value - 1) * 100}vw + ${gapWidth}px))`;
+    document.querySelectorAll('.container .inner div').forEach((divEl) => {
+      divEl.style.transform = transformValue;
+    });
+    // console.log(document.getElementsByClassName('inner-1'))
+  });
+
+  onMounted(() => {
+    // 초기 렌더링 후에도 watchEffect를 호출하여 초기 상태를 적용할 수 있습니다.
+    watchEffect();
+  });
+}
+
+const chartData = reactive({
+  labels: ['January', 'February', 'March', 'April', 'May'],
+  datasets: [
+    {
+      label: '',
+      backgroundColor: '#f87979',
+      data: [40, 20, 12, 50, 10],
+    },
+  ],
+});
+
+const q = ref('')
+
+const filteredRows = computed(() => {
+  if (!q.value) {
+    return people
+  }
+
+  return people.filter((person) => {
+    return Object.values(person).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase())
+    })
+  })
+})
 </script>
 
 <template>
   <UContainer class="">
-  <UCard class="mb-4">
-    <div class="flex justify-between items-center">
+  <UCard class="mb-0">
+    <div class="flex justify-between items-center p-0.5">
       <div class="text-4xl font-semibold text-blue-900 w-1/2">
-        Billing
+        재고조회
       </div>
-      <div class="">
-        <UInput color="blue" v-model="value" size="xs"/>
+      <div class="gap-1 flex">
+        <UInput 
+          v-model="q" 
+          color="gray" variant="outline"
+          placeholder="Filter people..." 
+          class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
+        />
+        <UButton 
+          icon="i-heroicons-document-magnifying-glass" 
+          class="text-gray-700 hover:bg-gray-100 rounded-md" 
+          variant="outline"
+        >
+          Filter
+        </UButton>
       </div>
-    </div>
-    <div>
-      <div class="border-b border-b-gray-200">
-        <ul class="-mb-px flex items-center gap-4 text-sm font-medium" >
-          <li 
-            v-for="item in tabItems" 
-            :key="item.id"
-          >
-            <a
-              @click="selectTab(item)"
-              :class="[
-                'px-8',
-                selectedTab.id === item.id ?
-                'relative flex items-center justify-center gap-2 px-1 py-3 text-blue-700 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-700'
-                :
-                'flex items-center justify-center text-gray-500 px-1 py-3'
-              ]"
-            >
-              {{ item.name }}
-            </a>
-          </li>
-          <!-- <li class="flex-1">
-            <a
-            >
-              Profile
-            </a>
-          </li>
-          <li class="flex-1">
-            <a class="flex items-center justify-center gap-2 px-1 py-3 text-gray-500 hover:text-blue-700">
-              Preferences
-            </a>
-          </li> -->
-        </ul>
-      </div>
-          
     </div>
   </UCard>
-  <UTable 
-    v-model="selected" 
-    :rows="people"
-    class="bg-slate-50 rounded"
-  />
-  <!-- <button
-              :class="[
-                'px-4 rounded-md py-1 leading-5',
-                'ring-white/60',
-                selected
-                  ? 'bg-white text-black border border-black rounded-md text-sm font-semibold'
-                  : 'text-gray-400 hover:bg-white/[0.12] hover:text-black text-sm font-thin ',
-              ]"
-            /> -->
+  <div>
+    <div class="border-b border-b-gray-200 mb-2">
+      <ul class="-mb-px flex items-center gap-4 text-sm font-medium" >
+        <li 
+          v-for="item in tabItems" 
+          :key="item.id"
+        >
+          <button
+            @click="selectTab(item)"
+            :class="[
+              'px-8',
+              selectedTab.id === item.id ?
+              'relative flex items-center justify-center gap-2 px-1 py-3 text-blue-700 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-700'
+              :
+              'flex items-center justify-center text-gray-500 px-1 py-3'
+            ]"
+          >
+            {{ item.name }}
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="slide-container">
+      <div class="container">
+        <div class="inner">
+          <UTable 
+            v-model="selected" 
+            :rows="filteredRows" 
+            :columns="columns" 
+            class="bg-slate-50 rounded"
+          />
+        </div>
+        <div class="inner">
+          <ChartBar
+            :chartData="chartData"
+            style="height: 100%;"
+            class="bg-slate-50 rounded"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
   </UContainer>
 </template>
+
+<style scoped>
+/* 슬라이드 컨테이너 스타일 */
+.slide-container {
+  width: calc(100vw - 256px);
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  width: calc(100vw - 256px);
+}
+
+.container .inner div {
+  width: calc(100vw - 256px);
+  font-size: 4rem;
+  transition-property: transform;
+  transition-duration: 1s;
+  text-align: left;
+  transition-timing-function: ease-in-out;
+  line-height: 500px;
+}
+</style>

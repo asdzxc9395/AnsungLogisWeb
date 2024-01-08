@@ -1,9 +1,53 @@
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-square.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*Layouts*/
 
+/* Fonts */
+/* @font-face {
+    font-family:'NanumGothicEco';
+    src: url('/fonts/NanumGothicEco.ttf') format('truetype');
+    font-weight: 500;
+}
+@font-face {
+    font-family:'NanumGothicEcoBold';
+    src: url('/fonts/NanumGothicEcoBold.ttf') format('truetype');
+    font-weight: 500;
+}
+@font-face {
+    font-family:'NanumGothicEcoExtraBold';
+    src: url('/fonts/NanumGothicEcoExtraBold.ttf') format('truetype');
+    font-weight: 500;
+} */
+div#__nuxt {
+    font-family: 'NanumSquare', sans-serif !important;
+}
+
+/* font 사용으로 인한 여백 제거 */
+/* .text-xs {height: 12px;} */
+/* .text-sm {height: 14px;} */
+/* .text-base {height: 16px;} */
+/* .text-lg {height: 18px;} */
+/* .text-xl {height: 20px;} */
+/* .text-2xl {height: 24px;} */
+/* .text-3xl {height: 30px;} */
+/* .text-4xl {height: 36px;} */
+/* .text-5xl {height: 48px;} */
+/* .text-6xl {height: 60px;} */
+/* .text-7xl {height: 72px;} */
+/* .text-8xl {height: 96px;} */
+/* .text-9xl {height: 128px;} */
+
+/* Table */
+td, th {
+    padding: 10px 8px 10px 8px !important;
+}
+
+
+/*Layouts*/
+/* 
 div#__nuxt {
     @apply h-full;
 }
@@ -100,4 +144,4 @@ h5 {
 
 .card .card-content {
     @apply p-4;
-}
+} */
