@@ -8,7 +8,7 @@ npm run build
 npm run preview
 ```
 
-## tailwind, nuxtui clas 정리
+## tailwind, nuxtui class 정리
 https://nerdcave.com/tailwind-cheat-sheet
 
 ## version
