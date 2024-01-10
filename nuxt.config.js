@@ -8,6 +8,7 @@ export default defineNuxtConfig({
         authUri: '',
         tokenUri: '',
         apiBaseUri: '',
+        baseURL: process.env.API_URL_BROWSER,
     }
   },
   build: {
