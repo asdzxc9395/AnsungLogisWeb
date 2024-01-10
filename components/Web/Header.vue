@@ -1,39 +1,49 @@
 <template>
   <div class="w-60">
     <nav class="mx-auto flex max-w-7xl font-sans" aria-label="Global">
-      <div class="w-full h-screen" style="">
+      <div class="w-full h-screen" style="" @mouseover="changeBg(true)" @mouseout="changeBg(false)">
         <!-- <div class="flex justify-center my-4">
           <span class="text-2xl font-semibold ">MHCNC</span>
         </div> -->
-        <div class="flex justify-center my-6">
-          <UButton class="bg-indigo-700 px-3 text-base font-medium" label="Connect New Account" />
+        <div :class="`flex justify-center py-6 ${headerBg} mr-2`">
+          <UButton class="bg-indigo-700 px-3 text-base font-medium" label="Logout" v-if="authenticated" @click="logout"/>
         </div>
-        <div class="mt-6 flow-root">
-          <div class="-my-6 divide-y divide-gray-500/10">
-            <div  v-if="authenticated" class="space-y-2 py-6 px-2">
-              <!-- <Disclosure as="div" class="" v-slot="{ open }">
-                <DisclosureButton class="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-base leading-7 text-gray-900 hover:bg-green-300">
-                  Product
+        <div class="pt-6 flow-root overflow-y-hidden hover:overflow-y-scroll scrollBar" style="height: calc(100vh - 84px)">
+          <div class="-my-6 divide-y divide-gray-500/10" >
+            <div v-for="(menu, i) in menus.data" :key="i" class="space-y-2 py-1 px-2 overflow-y-auto">
+              <Disclosure as="div" class="" v-slot="{ open }">
+                <DisclosureButton 
+                  class="flex w-full items-center justify-between py-2 pl-2 rounded-sm text-base font-semibold leading-0 text-gray-900 hover:bg-slate-200"
+                >
+                  {{ menu.name }}
                   <ChevronDownIcon :class="[open ? 'rotate-180' : '', 'h-5 w-5 flex-none']" aria-hidden="true" />
                 </DisclosureButton>
-                <DisclosurePanel class="mt-2 space-y-2">
-                  <DisclosureButton v-for="item in [...products, ...callsToAction]" :key="item.name" as="a" :href="item.href" class="block rounded-lg py-2 pl-6 pr-3 text-sm font-base leading-7 text-gray-900 hover:bg-green-300">{{ item.name }}</DisclosureButton>
+                <DisclosurePanel class="mt-2 space-y-2" v-if="menu.subs.length > 0">
+                  <DisclosureButton 
+                    v-for="item in menu.subs" 
+                    :key="item.MENU_SEQ" 
+                    as="a" 
+                    :href="item.href" 
+                    class="block rounded-md py-0 pl-6 pr-1 text-md font-base leading-7 text-gray-900 hover:bg-slate-200"
+                  >
+                    {{ item.SUBMENU_NM }}
+                  </DisclosureButton>
                 </DisclosurePanel>
-              </Disclosure> -->
-              <div 
+              </Disclosure>
+              <!-- <div 
               class="px-0 py-0 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300"
               >
               <UIcon class="h-5 mx-2" name="i-material-symbols-house-outline" dynamic/>
                 Dashboard
               </div>              
-              <div class="px-2 pt-2 text-xs font-semibold text-gray-500">SUPPORT</div>
+              <div class="px-2 pt-2 text-xs font-semibold text-gray-500">즐겨찾기</div>
               <div 
                 v-for="item in [...products]" 
                 :key="item.name" 
                 as="a"
                 class="flex items-center px-4 py-0 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300"
               >
-                <!-- <UIcon class="h-5 mx-1" name="i-material-symbols-folder-outline" dynamic/> -->
+                <UIcon class="h-5 mx-1" name="i-material-symbols-folder-outline" dynamic/>
                 <component :is="item.icon" class="h-5 mx-1 w-5" aria-hidden="true"/>
                 {{ item.name }}
               </div>
@@ -46,13 +56,11 @@
               >
                 <UIcon class="h-5 mx-1" name="i-material-symbols-bar-chart" dynamic/>
                 {{ item.name }}
-              </div>
-
+              </div> -->
             </div>
-            <div class="py-6">
-              <!-- <a v-if="!authenticated" href="/login" class="block rounded-lg px-3 py-2 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300">Login</a> -->
+            <!-- <div class="py-6">
               <a v-if="authenticated" @click="logout" class="block rounded-lg px-3 py-2.5 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300">Logout</a>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>      
@@ -115,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineProps } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -140,8 +148,10 @@ import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/so
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
 
-const router = useRouter();
+const { menus } = defineProps(['menus']);
+// const menu = ref(menus)
 
+const router = useRouter();
 const { logUserOut } = useAuthStore(); // use authenticateUser action from  auth store
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
 
@@ -161,6 +171,30 @@ const callsToAction = [
   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ]
 
+const headerBg = ref('bg-slate-100')
+const changeBg = (e) => {
+if(e) {
+  headerBg.value = 'bg-slate-200'
+} else {
+  headerBg.value = 'bg-slate-100'
+}
+}
+
 const mobileMenuOpen = ref(false)
 
 </script>
+<style scoped>
+.scrollBar::-webkit-scrollbar {
+    width: 0px;  /* 스크롤바의 너비 */
+}
+
+.scrollBar::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: #999; /* 스크롤바의 색상 */
+    border-radius: 10px;
+}
+
+.scrollBar::-webkit-scrollbar-track {
+    background: #eee;  /*스크롤바 뒷 배경 색상*/
+}
+</style>

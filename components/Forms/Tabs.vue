@@ -1,6 +1,5 @@
 <script setup>
-import { ref, toRefs, onMounted, defineProps, defineEmits } from 'vue';
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue';
+import { ref, defineProps, defineEmits } from 'vue';
 
 const { categories } = defineProps(['categories']);
 const category = ref(categories[0])

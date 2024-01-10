@@ -29,9 +29,10 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/ui",
     "@nuxtjs/tailwindcss",
-    '@pinia/nuxt'
+    '@pinia/nuxt',
   ],
   plugins: [
+    "~/plugins/calendar"
   ]  
   // components: [
   //   {

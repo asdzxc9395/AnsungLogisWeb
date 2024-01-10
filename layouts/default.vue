@@ -1,6 +1,6 @@
 <template>
   <div class="flex bg-slate-100 flex-auto relative">
-    <WebHeader />
+    <WebHeader :menus="menus"/>
     <div class="max-x-full flex-auto">
       <!-- <UBreadcrumb v-if="route.path == '/'" class="px-2 py-4" :links="links" /> -->
       <slot />
@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
 import { useRoute } from 'vue-router';
@@ -24,6 +24,9 @@ const logout = () => {
   logUserOut();
   router.push('/login');
 };
+
+const { data } = await useFetch('/api/menu')
+let menus = data.value
 
 const links = [{
   label: 'Home',

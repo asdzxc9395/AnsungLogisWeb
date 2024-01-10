@@ -12,6 +12,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 const value = ref('')
 
+// Table Search기능 + Pagination, selected 처리
 const columns = [{
   key: 'id',
   label: 'ID'
@@ -66,6 +67,26 @@ const people = [{
   role: 'Member'
 }]
 
+const page = ref(1)
+const pageCount = 5
+const pageLength = ref(people.length)
+const q = ref('')
+
+const filteredRows = computed(() => {
+  if (!q.value) {
+    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+  }
+
+  const filteredPeople = people.filter((person) => {
+    return Object.values(person).some((value) => {
+      return String(value).toLowerCase().includes(q.value.toLowerCase());
+    });
+  });
+
+  pageLength.value = filteredPeople.length;
+
+  return filteredPeople.slice((page.value - 1) * pageCount, page.value * pageCount);
+});
 const tabItems = [{
   id: 1,
   name: 'Overview',
@@ -73,14 +94,27 @@ const tabItems = [{
   id: 2,
   name: 'DashBoard',
 }]
+
 const selected = ref([people[1]])
 const selectedTab = ref(tabItems[1])
 const selectTab = (tab) => {
   selectedTab.value = tab;
   render(tab.id);
 }
+//Chartjs
+const chartData = reactive({
+  labels: ['January', 'February', 'March', 'April', 'May'],
+  datasets: [
+    {
+      label: '',
+      backgroundColor: '#f87979',
+      data: [40, 20, 12, 50, 10],
+    },
+  ],
+});
 
-const activeSlide = ref(1);
+// Table / Chartjs 슬라이딩 처리
+const activeSlide = ref(0);
 const render = (slideIndex) => {
   activeSlide.value = slideIndex;
 };
@@ -101,40 +135,23 @@ if(process.client) {
   });
 }
 
-const chartData = reactive({
-  labels: ['January', 'February', 'March', 'April', 'May'],
-  datasets: [
-    {
-      label: '',
-      backgroundColor: '#f87979',
-      data: [40, 20, 12, 50, 10],
-    },
-  ],
-});
-
-const q = ref('')
-
-const filteredRows = computed(() => {
-  if (!q.value) {
-    return people
-  }
-
-  return people.filter((person) => {
-    return Object.values(person).some((value) => {
-      return String(value).toLowerCase().includes(q.value.toLowerCase())
-    })
-  })
-})
+// Vcalendar 처리
+const startDate = ref(new Date());
+const handleUpdate = (e) => {
+  console.log(e)
+  startDate.value = e
+}
 </script>
 
 <template>
   <UContainer class="">
   <UCard class="mb-0">
     <div class="flex justify-between items-center p-0.5">
-      <div class="text-4xl font-semibold text-blue-900 w-1/2">
+      <div class="text-4xl font-semibold text-blue-900 w-1/3">
         재고조회
       </div>
-      <div class="gap-1 flex">
+      <div class="gap-2 flex">
+        <FormsDatePicker :date="startDate" @change-date="handleUpdate"/>
         <UInput 
           v-model="q" 
           color="gray" variant="outline"
@@ -191,6 +208,9 @@ const filteredRows = computed(() => {
           />
         </div>
       </div>
+    </div>
+    <div class="flex justify-center py-3.5 border-t border-gray-200 dark:border-gray-700">
+      <UPagination v-model="page" :page-count="pageCount" :total="pageLength" />
     </div>
   </div>
   </UContainer>
