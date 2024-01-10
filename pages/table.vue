@@ -9,84 +9,58 @@
 import { ref, onMounted, watchEffect, defineComponent } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import * as testApi from "~/api/testApi";
 
 const value = ref('')
 
 // Table Search기능 + Pagination, selected 처리
 const columns = [{
-  key: 'id',
-  label: 'ID'
+  key: 'receiptDt',
+  label: 'receiptDt'
 }, {
-  key: 'name',
-  label: 'Name'
+  key: 'receiptKey',
+  label: 'receiptKey'
 }, {
-  key: 'title',
-  label: 'Title'
+  key: 'skuPlanQty',
+  label: 'skuPlanQty'
 }, {
-  key: 'email',
-  label: 'Email'
+  key: 'skuWorkQty',
+  label: 'skuWorkQty'
 }, {
-  key: 'role',
-  label: 'Role'
+  key: 'sourceOrigin',
+  label: 'sourceOrigin'
+}, {
+  key: 'pcsPlanQty',
+  label: 'pcsPlanQty'
+}, {
+  key: 'pcsWorkQty',
+  label: 'pcsWorkQty'
 }]
-const people = [{
-  id: 1,
-  name: 'Lindsay Walton',
-  title: 'Front-end Developer',
-  email: 'lindsay.walton@example.com',
-  role: 'Member'
-}, {
-  id: 2,
-  name: 'Courtney Henry',
-  title: 'Designer',
-  email: 'courtney.henry@example.com',
-  role: 'Admin'
-}, {
-  id: 3,
-  name: 'Tom Cook',
-  title: 'Director of Product',
-  email: 'tom.cook@example.com',
-  role: 'Member'
-}, {
-  id: 4,
-  name: 'Whitney Francis',
-  title: 'Copywriter',
-  email: 'whitney.francis@example.com',
-  role: 'Admin'
-}, {
-  id: 5,
-  name: 'Leonard Krasner',
-  title: 'Senior Designer',
-  email: 'leonard.krasner@example.com',
-  role: 'Owner'
-}, {
-  id: 6,
-  name: 'Floyd Miles',
-  title: 'Principal Designer',
-  email: 'floyd.miles@example.com',
-  role: 'Member'
-}]
-
+const tableItems = ref([])
+const selected = ref([])
 const page = ref(1)
-const pageCount = 5
-const pageLength = ref(people.length)
+const pageCount = 10
+const pageLength = ref(tableItems.length)
 const q = ref('')
-
 const filteredRows = computed(() => {
+  if(tableItems.value.length == 0) {
+    return
+  }
   if (!q.value) {
-    return people.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    pageLength.value = tableItems.value.length
+    return tableItems.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
   }
 
-  const filteredPeople = people.filter((person) => {
+  const filteredPeople = tableItems.value.filter((person) => {
     return Object.values(person).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
   });
 
   pageLength.value = filteredPeople.length;
-
   return filteredPeople.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
+
 const tabItems = [{
   id: 1,
   name: 'Overview',
@@ -95,12 +69,14 @@ const tabItems = [{
   name: 'DashBoard',
 }]
 
-const selected = ref([people[1]])
-const selectedTab = ref(tabItems[1])
-const selectTab = (tab) => {
-  selectedTab.value = tab;
-  render(tab.id);
-}
+// Vcalendar 처리
+const startDate = ref(new Date());
+const endDate = ref(new Date());
+
+// Table / Chartjs 슬라이딩 처리
+const activeSlide = ref(0);
+const selectedTab = ref(tabItems[0])
+
 //Chartjs
 const chartData = reactive({
   labels: ['January', 'February', 'March', 'April', 'May'],
@@ -113,12 +89,13 @@ const chartData = reactive({
   ],
 });
 
-// Table / Chartjs 슬라이딩 처리
-const activeSlide = ref(0);
 const render = (slideIndex) => {
   activeSlide.value = slideIndex;
 };
-
+const selectTab = (tab) => {
+  selectedTab.value = tab;
+  render(tab.id);
+}
 if(process.client) {
   watchEffect(() => {
     let gapWidth =  activeSlide.value == 1 ? '0' : '256';
@@ -135,12 +112,17 @@ if(process.client) {
   });
 }
 
-// Vcalendar 처리
-const startDate = ref(new Date());
-const handleUpdate = (e) => {
-  console.log(e)
-  startDate.value = e
-}
+const initApiGetCall = async () => {
+  const datainfo = {
+    params: {
+      DATE_FR: startDate.value,
+      DATE_TO: endDate.value,
+    },
+  };
+  const resp = await testApi.initGet(datainfo, "user/입고 조회");
+  // const resp = await testApi.testApiCall(datainfo, "user/login", "POST");
+  tableItems.value = resp.data;
+};
 </script>
 
 <template>
@@ -151,17 +133,20 @@ const handleUpdate = (e) => {
         재고조회
       </div>
       <div class="gap-2 flex">
-        <FormsDatePicker :date="startDate" @change-date="handleUpdate"/>
+        <FormsDatePicker @change-date="value => startDate = value"/>
+        <FormsDatePicker @change-date="value => endDate = value"/>
         <UInput 
           v-model="q" 
+          @keydown="page = 1"
           color="gray" variant="outline"
-          placeholder="Filter people..." 
+          placeholder="Filter tableItems..." 
           class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
         <UButton 
           icon="i-heroicons-document-magnifying-glass" 
           class="text-gray-700 hover:bg-gray-100 rounded-md" 
           variant="outline"
+          @click="initApiGetCall"
         >
           Filter
         </UButton>
@@ -199,6 +184,9 @@ const handleUpdate = (e) => {
             :columns="columns" 
             class="bg-slate-50 rounded"
           />
+        <div class="py-3.5 border-t border-gray-200 dark:border-gray-700">
+          <UPagination class="flex justify-center" v-model="page" :page-count="pageCount" :total="pageLength"/>
+        </div>          
         </div>
         <div class="inner">
           <ChartBar
@@ -209,9 +197,7 @@ const handleUpdate = (e) => {
         </div>
       </div>
     </div>
-    <div class="flex justify-center py-3.5 border-t border-gray-200 dark:border-gray-700">
-      <UPagination v-model="page" :page-count="pageCount" :total="pageLength" />
-    </div>
+
   </div>
   </UContainer>
 </template>
@@ -234,6 +220,5 @@ const handleUpdate = (e) => {
   transition-duration: 1s;
   text-align: left;
   transition-timing-function: ease-in-out;
-  line-height: 500px;
 }
 </style>
