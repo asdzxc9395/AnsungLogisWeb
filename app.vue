@@ -13,8 +13,10 @@ const layout = "layout";
 
 <template>
   <NuxtLayout>
-    <NuxtPage class="sm:px-4 py-4 md:px-4 py-4 lg:px-4 py-4 max-w-full flex-auto"/>
-    <DialogToastpopup/>
+    <NuxtPage
+      class="sm:px-4 py-4 md:px-4 py-4 lg:px-4 py-4 max-w-full flex-auto"
+    />
+    <DialogToastpopup />
+    <DialogDialogpopup />
   </NuxtLayout>
 </template>
-
