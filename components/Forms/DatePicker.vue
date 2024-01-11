@@ -1,15 +1,16 @@
 <script setup>
 import { ref, toRefs, onMounted, defineProps, defineEmits } from 'vue';
+import { format } from 'date-fns';
+import koLocale from 'date-fns/locale/ko';
 
-const { date } = defineProps(['date']);
-const d = ref(date)
+const date = ref(new Date());
 const emit = defineEmits(['changeDate']);
 
-const handleDateChange = () =>emit('changeDate', d.value);
+const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd', { locale: koLocale }));
 </script>
 <template>
     <div></div>
-    <VDatePicker v-model="d" :popover="false" @click="handleDateChange()">
+    <VDatePicker v-model="date" :popover="false" @click="handleDateChange()">
         <template #default="{ togglePopover, inputValue, inputEvents }">
           <div>
             <UInput
