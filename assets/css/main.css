@@ -56,11 +56,20 @@ div#__nuxt {
     background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
 }
 /* Table */
-td, th {
-    padding: 10px 8px 10px 8px !important;
+
+/* hover animation */
+.hover-change-animation {
+    transition: color 0.3s;
+}
+    
+/* dialog height */
+.calendar-height {
+    height: calc(100% + 272px) !important;
 }
 
-
+.shadow-right {
+    box-shadow: 2px 9px 10px -1px #888;
+}
 /*Layouts*/
 /* 
 div#__nuxt {

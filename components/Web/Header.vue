@@ -2,20 +2,42 @@
   <div class="w-60">
     <nav class="mx-auto flex max-w-7xl font-sans" aria-label="Global">
       <div class="w-full h-screen" style="" @mouseover="changeBg(true)" @mouseout="changeBg(false)">
-        <!-- <div class="flex justify-center my-4">
-          <span class="text-2xl font-semibold ">MHCNC</span>
-        </div> -->
-        <div :class="`flex justify-center py-6 ${headerBg} mr-2`">
-          <UButton class="bg-indigo-700 px-3 text-base font-medium" label="Logout" v-if="authenticated" @click="logout"/>
+        <div :class="`flex justify-center gap-8 items-center ${headerBg} mr-2`">
+        <div :class="`flex justify-center py-6 gap-1 items-center ${headerBg}`">
+          <UIcon class="h-10 w-10 text-gray-400" name="i-heroicons-user-circle-16-solid" dynamic/>
+          <div>
+            <div class="text-base font-semibold">채진호</div>
+            <div class="pl-1 text-xs text-gray-500 font-light">admin</div>
+          </div>
         </div>
-        <div class="pt-6 flow-root overflow-y-hidden hover:overflow-y-scroll scrollBar" style="height: calc(100vh - 84px)">
+          <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }" :popper="{ placement: 'bottom-start' }">
+            <UIcon class="h-5 w-5 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-material-symbols-settings" dynamic/>
+
+            <template #account="{ item }">
+              <div class="text-left">
+                <p class="truncate font-medium text-gray-900 dark:text-white">
+                  {{ item.label }}
+                </p>
+              </div>
+            </template>
+
+            <template #item="{ item }">
+              <span class="truncate">{{ item.label }}</span>
+              <UIcon :name="item.icon" class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto" />
+            </template>
+          </UDropdown>                 
+        </div>
+        <div class="pt-6 flow-root overflow-y-hidden hover:overflow-y-scroll scrollBar" style="height: calc(100vh - 88px)">
           <div class="-my-6 divide-y divide-gray-500/10" >
-            <div v-for="(menu, i) in menus.data" :key="i" class="space-y-2 py-1 px-2 overflow-y-auto">
+            <div v-for="(menu, i) in menus" :key="i" class="space-y-2 py-1 px-2 overflow-y-auto">
               <Disclosure as="div" class="" v-slot="{ open }">
                 <DisclosureButton 
-                  class="flex w-full items-center justify-between py-2 pl-2 rounded-sm text-base font-semibold leading-0 text-gray-900 hover:bg-slate-200"
+                  class="flex w-full items-center justify-between py-1 pl -2 rounded-sm text-sm font-semibold leading-0 text-gray-900 hover:bg-slate-200"
                 >
+                <div class="flex items-center justify-between">
+                  <component :is="products[i].icon" class="mr-2 h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />                
                   {{ menu.name }}
+                </div>
                   <ChevronDownIcon :class="[open ? 'rotate-180' : '', 'h-5 w-5 flex-none']" aria-hidden="true" />
                 </DisclosureButton>
                 <DisclosurePanel class="mt-2 space-y-2" v-if="menu.subs.length > 0">
@@ -24,43 +46,13 @@
                     :key="item.MENU_SEQ" 
                     as="a" 
                     :href="item.href" 
-                    class="block rounded-md py-0 pl-6 pr-1 text-md font-base leading-7 text-gray-900 hover:bg-slate-200"
+                    class="block rounded-md py-0 pl-6 pr-1 text-sm font-base leading-7 text-gray-900 hover:bg-slate-200"
                   >
                     {{ item.SUBMENU_NM }}
                   </DisclosureButton>
                 </DisclosurePanel>
               </Disclosure>
-              <!-- <div 
-              class="px-0 py-0 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300"
-              >
-              <UIcon class="h-5 mx-2" name="i-material-symbols-house-outline" dynamic/>
-                Dashboard
-              </div>              
-              <div class="px-2 pt-2 text-xs font-semibold text-gray-500">즐겨찾기</div>
-              <div 
-                v-for="item in [...products]" 
-                :key="item.name" 
-                as="a"
-                class="flex items-center px-4 py-0 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300"
-              >
-                <UIcon class="h-5 mx-1" name="i-material-symbols-folder-outline" dynamic/>
-                <component :is="item.icon" class="h-5 mx-1 w-5" aria-hidden="true"/>
-                {{ item.name }}
-              </div>
-              <div class="px-2 pt-2 text-xs font-semibold text-gray-500">ANALYTICS</div>
-              <div 
-                v-for="item in [...products]" 
-                :key="item.name" 
-                as="a"
-                class="px-4 py-0 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300"
-              >
-                <UIcon class="h-5 mx-1" name="i-material-symbols-bar-chart" dynamic/>
-                {{ item.name }}
-              </div> -->
             </div>
-            <!-- <div class="py-6">
-              <a v-if="authenticated" @click="logout" class="block rounded-lg px-3 py-2.5 text-sm font-semibold leading-7 text-gray-900 hover:bg-slate-300">Logout</a>
-            </div> -->
           </div>
         </div>
       </div>      
@@ -181,7 +173,38 @@ if(e) {
 }
 
 const mobileMenuOpen = ref(false)
-
+// const items = [[{
+//     label: 'Edit',
+//     icon: 'i-heroicons-pencil-square-20-solid',
+//     // shortcuts: ['E'],
+//     click: () => {
+//       console.log('Edit')
+//     }
+//   }],[{
+//     label: 'Logout',
+//     icon: 'i-heroicons-arrow-right-on-rectangle-20-solid',
+//     // shortcuts: ['⌘', 'D']
+//     click: () => {
+//       logout()
+//     }
+//   }]
+// ]
+const items = [
+  [{
+    label: 'mhcnc@mhcnc.com',
+    slot: 'account',
+    disabled: true
+  }], [{
+    label: 'Settings',
+    icon: 'i-heroicons-cog-8-tooth'
+  }], [{
+    label: 'Logout',
+    icon: 'i-heroicons-arrow-left-on-rectangle',
+    click: () => {
+      logout()
+    }
+  }]
+]
 </script>
 <style scoped>
 .scrollBar::-webkit-scrollbar {

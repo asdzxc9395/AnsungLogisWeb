@@ -1,4 +1,8 @@
 export default defineNuxtConfig({
+  ssr: false,
+  colorMode: {
+    preference: 'light'
+  },  
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
@@ -34,7 +38,10 @@ export default defineNuxtConfig({
   ],
   plugins: [
     "~/plugins/calendar"
-  ]  
+  ],
+  ui: {
+    icons: ['mdi']
+  }
   // components: [
   //   {
   //     path: '~/components',
