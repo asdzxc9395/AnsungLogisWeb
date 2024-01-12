@@ -59,11 +59,12 @@ const filteredRows = computed(() => {
   if(tableItems.value.length == 0) {
     return
   }
+  console.log(tableItems)
   if (!q.value) {
     pageLength.value = tableItems.value.length
-    return tableItems.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    // return tableItems.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
+    return tableItems.value
   }
-
   const filteredPeople = tableItems.value.filter((person) => {
     return Object.values(person).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
@@ -71,7 +72,9 @@ const filteredRows = computed(() => {
   });
 
   pageLength.value = filteredPeople.length;
-  return filteredPeople.slice((page.value - 1) * pageCount, page.value * pageCount);
+  return filteredPeople;
+
+  // return filteredPeople.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
 
 const tabItems = [{
@@ -144,7 +147,7 @@ const initApiGetCall = async () => {
   <UCard class="mb-0">
     <div class="flex justify-between items-center p-0.5">
       <div class="text-4xl font-semibold text-blue-900 w-1/3">
-        재고조회
+        피킹수동할당
       </div>
       <div class="gap-2 flex">
         <UInput 
@@ -198,15 +201,25 @@ const initApiGetCall = async () => {
     <div class="slide-container">
       <div class="container">
         <div class="inner">
-          <UTable 
-            v-model="selected" 
-            :rows="filteredRows" 
-            :columns="columns" 
-            class="bg-slate-50 rounded"
-          />
-        <div class="py-3.5 border-t border-gray-200 dark:border-gray-700">
-          <UPagination class="flex justify-center" v-model="page" :page-count="pageCount" :total="pageLength"/>
-        </div>          
+          <div class=" flex gap-2">
+            <UTable 
+              v-model="selected" 
+              :rows="filteredRows" 
+              :columns="columns" 
+              class=""
+              style="height: calc(100vh - 160px);"
+            >
+            </UTable>
+            <UTable 
+              v-model="selected" 
+              :rows="filteredRows" 
+              :columns="columns" 
+              class=""
+              style="height: calc(100vh - 160px);"
+            >
+            </UTable>
+          </div>
+
         </div>
         <div class="inner">
           <ChartBar

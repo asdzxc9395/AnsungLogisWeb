@@ -1,4 +1,8 @@
 export default defineNuxtConfig({
+  ssr: false,
+  colorMode: {
+    preference: 'light'
+  },  
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
@@ -27,8 +31,17 @@ export default defineNuxtConfig({
   //         autoprefixer: {},
   //     },
   // },
-  modules: ["@nuxt/ui", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
-  plugins: ["~/plugins/calendar"],
+  modules: [
+    "@nuxt/ui",
+    "@nuxtjs/tailwindcss",
+    '@pinia/nuxt',
+  ],
+  plugins: [
+    "~/plugins/calendar"
+  ],
+  ui: {
+    icons: ['mdi']
+  }
   // components: [
   //   {
   //     path: '~/components',
