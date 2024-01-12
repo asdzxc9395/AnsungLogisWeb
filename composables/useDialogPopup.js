@@ -21,6 +21,13 @@
                             default : "w-1/2"
           - customHeight  : 모달 세로길이 추가 조정 (tailwind css 기반)
                             default : "h-1/3"
+          - rtnValue      : 버튼 반환값
+                            default   : -1000
+                            case ex.  : -2 (esc버튼)
+                                      : -1 (닫기버튼)
+                                      : 0 (NO버튼)
+                                      : 1 (OK,YES버튼)
+                            --> 전역변수 처리 권장
 */
 
 import { defineStore } from "pinia";
@@ -35,6 +42,7 @@ export const useDialogPopup = defineStore("actDialog", {
       closeBtn: true,
       customWidth: "w-1/2",
       customHeight: "h-1/3",
+      rtnValue: -1000,
     };
   },
   getters: {},
@@ -65,11 +73,15 @@ export const useDialogPopup = defineStore("actDialog", {
       return true;
     },
 
-    reset() {
+    reset(val) {
+      this.rtnValue = val;
       this.$reset();
     },
 
     // 테스트용 메서드
+    setClose() {
+      this.show = false;
+    },
     setBtnType(type) {
       this.btnType = type;
       return true;

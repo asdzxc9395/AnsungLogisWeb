@@ -8,6 +8,14 @@
   <div class="py-3">
     <UButton type="button" @click="initToast"> call Toastpopup </UButton>
   </div>
+
+  <div class="py-3">
+    <UButton type="button" @click="initDialog('default', 'popup Contents')">
+      call Dialogpopup - default (w-1/2 h-1/3)
+    </UButton>
+    <h2>modal popup close respose value :: {{ modalRtn }}</h2>
+  </div>
+
   <div class="py-3">
     <UButton type="button" @click="initDialog('default', 'popup Contents')">
       call Dialogpopup - default (w-1/2 h-1/3)
@@ -74,11 +82,14 @@
   <div class="max-w-[1500px] h-[300px] text-ellipsis overflow-scroll">
     {{ rtnData }}
   </div>
+
+  <DialogDialogpopup @modal-result-value-test="returnModalRtn" />
 </template>
 <script lang="ts" setup>
 import * as testApi from "~/api/testApi";
 
-let rtnData = ref("[ 여기에서 api 호출 결과를 확인할 수 있습니다. ]");
+const rtnData = ref("[ 여기에서 api 호출 결과를 확인할 수 있습니다. ]");
+const modalRtn = ref(-100);
 
 const clearLog = () => {
   rtnData.value = "";
@@ -102,6 +113,10 @@ const initDialog = (
   ModalDialog.actDialog(title, data, btnType, width, height, closeBtn);
   // 기본적으로는 width, height, closeBtn을 재정의할 일이 없도록 처리할 예정,
   // 통상 호출 : ModalDialog.actDialog(title, data, btnType)
+  console.log(
+    "after close인지 확인, ModalDialog.rtnValue:: ",
+    ModalDialog.rtnValue
+  );
 };
 
 /* call API (GET) */
@@ -137,6 +152,12 @@ const initApiPostErrCall = async () => {
   // const resp = await testApi.testApiCall(datainfo, "user/login", "POST");
   rtnData.value = resp.data;
 };
+
+function returnModalRtn(rtnVal: any) {
+  console.log("returnValue:: ", rtnVal);
+  modalRtn.value = rtnVal;
+  return rtnVal;
+}
 
 onMounted(async () => {});
 </script>
