@@ -7,7 +7,8 @@
           - msg           : 메시지 내용
           - type          : 타입 
                             default : none
-                            type    : success, info, warning, error
+                            type    : "success", "info", "warning", "error" 
+                            --> 전역변수 처리예정
           - show          : 팝업 창 활성화여부
                             default : true
           - closeBtn      : 닫기버튼 활성화여부 

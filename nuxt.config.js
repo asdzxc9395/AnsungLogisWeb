@@ -6,25 +6,25 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     public: {
-        debug: '',
-        clientId: '',
-        redirectUri: '',
-        authUri: '',
-        tokenUri: '',
-        apiBaseUri: '',
-        baseURL: process.env.API_URL_BROWSER,
-    }
+      debug: "",
+      clientId: "",
+      redirectUri: "",
+      authUri: "",
+      tokenUri: "",
+      apiBaseUri: "",
+      baseURL: process.env.API_URL_BROWSER,
+    },
   },
   build: {
     // You can extend webpack config here
-    transpile: ['vue-bundle'],
+    transpile: ["vue-bundle"],
   },
   app: {
     head: {
-        title: process.env.APP_NAME
-    }
+      title: process.env.APP_NAME,
+    },
   },
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   // postcss: {
   //     plugins: {
   //         // tailwindcss: {},
@@ -53,4 +53,4 @@ export default defineNuxtConfig({
   //     extensions: ['.vue']
   //   },
   // ],
-})
+});
