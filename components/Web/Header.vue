@@ -136,7 +136,7 @@ import {
   SquaresPlusIcon,
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon, HeartIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
 
@@ -152,6 +152,7 @@ const logout = () => {
   router.push('/login');
 };
 const products = [
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: HeartIcon },
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
   { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
   { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },

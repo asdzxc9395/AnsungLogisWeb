@@ -28,6 +28,30 @@ const logout = () => {
 // let menus = data.value
 let menus = [
     {
+      "formName" : "Bookmark",
+      "name": "즐겨찾기",
+      "subs": [
+        {
+          "MENU_URL": "Bookmark_01",
+          "MENU_SEQ": 1,
+          "MENU_NM": "기준정보",
+          "SUBMENU_SEQ": 1,
+          "SUBMENU_NM": "품목관리",
+          "FORM_NAME": "BookmarkSku",
+          "REG_DT": "2022-02-07 00:00:00.0000000"
+        },
+        {
+          "MENU_URL": "Bookmark_02",
+          "MENU_SEQ": 1,
+          "MENU_NM": "기준정보",
+          "SUBMENU_SEQ": 1,
+          "SUBMENU_NM": "거래처관리",
+          "FORM_NAME": "BookmarkCust",
+          "REG_DT": "2022-02-14 00:00:00.0000000"
+        },
+      ]
+    },
+    {
       "formName" : "Master",
       "name": "기준정보",
       "subs": [

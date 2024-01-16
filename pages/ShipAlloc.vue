@@ -29,25 +29,32 @@ const downloadExcel =() => {
 // Table Search기능 + Pagination, selected 처리
 const columns = [{
   key: 'receiptDt',
-  label: 'receiptDt'
+  label: 'receiptDt',
+  sortable: true
 }, {
   key: 'receiptKey',
-  label: 'receiptKey'
+  label: 'receiptKey',
+  sortable: true
 }, {
   key: 'skuPlanQty',
-  label: 'skuPlanQty'
+  label: 'skuPlanQty',
+  sortable: true
 }, {
   key: 'skuWorkQty',
-  label: 'skuWorkQty'
+  label: 'skuWorkQty',
+  sortable: true
 }, {
   key: 'sourceOrigin',
-  label: 'sourceOrigin'
+  label: 'sourceOrigin',
+  sortable: true
 }, {
   key: 'pcsPlanQty',
-  label: 'pcsPlanQty'
+  label: 'pcsPlanQty',
+  sortable: true
 }, {
   key: 'pcsWorkQty',
-  label: 'pcsWorkQty'
+  label: 'pcsWorkQty',
+  sortable: true
 }]
 const tableItems = ref([])
 const selected = ref([])
@@ -55,28 +62,37 @@ const page = ref(1)
 const pageCount = 10
 const pageLength = ref(tableItems.length)
 const q = ref('')
+const searchTabs = ref([])
 const filteredRows = computed(() => {
   if(tableItems.value.length == 0) {
     return
   }
-  console.log(tableItems)
+      
   if (!q.value) {
     pageLength.value = tableItems.value.length
-    // return tableItems.value.slice((page.value - 1) * pageCount, (page.value) * pageCount)
     return tableItems.value
   }
+
+
   const filteredPeople = tableItems.value.filter((person) => {
-    return Object.values(person).some((value) => {
+    const filteredRow = {};
+    
+    searchTabs.value.forEach((tab) => {
+      if (person.hasOwnProperty(tab)) {
+        filteredRow[tab] = person[tab];
+      }
+    });
+
+    const row = searchTabs.value.length > 0 ? filteredRow : person
+
+    return Object.values(row).some((value) => {
       return String(value).toLowerCase().includes(q.value.toLowerCase());
     });
   });
 
   pageLength.value = filteredPeople.length;
   return filteredPeople;
-
-  // return filteredPeople.slice((page.value - 1) * pageCount, page.value * pageCount);
 });
-
 const tabItems = [{
   id: 1,
   name: 'Overview',
@@ -144,12 +160,12 @@ const initApiGetCall = async () => {
 
 <template>
   <UContainer class="">
-  <UCard class="mb-0">
-    <div class="flex justify-between items-center p-0.5">
+  <UCard class="mb-0 p-0.5 relative">
+    <div class="flex items-center justify-between w-full relative">
       <div class="text-4xl font-semibold text-blue-900 w-1/3">
         피킹수동할당
       </div>
-      <div class="gap-2 flex">
+      <div class="gap-2 flex relative">
         <UInput 
           v-model="q" 
           @keydown="page = 1"
@@ -157,6 +173,7 @@ const initApiGetCall = async () => {
           placeholder="Filter tableItems..." 
           class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
+
         <UButton 
           icon="i-mdi-microsoft-excel" 
           class="text-gray-700 hover:bg-gray-100 rounded-md" 
@@ -202,22 +219,22 @@ const initApiGetCall = async () => {
       <div class="container">
         <div class="inner">
           <div class=" flex gap-2">
-            <UTable 
+            <FormsTable
               v-model="selected" 
               :rows="filteredRows" 
-              :columns="columns" 
-              class=""
+              :columns="columns"
+              :search-tabs="searchTabs"
+              class="scrollBar"
               style="height: calc(100vh - 160px);"
-            >
-            </UTable>
-            <UTable 
+            />
+            <FormsTable
               v-model="selected" 
               :rows="filteredRows" 
-              :columns="columns" 
-              class=""
+              :columns="columns"
+              :search-tabs="searchTabs"
+              class="scrollBar"
               style="height: calc(100vh - 160px);"
-            >
-            </UTable>
+            />
           </div>
 
         </div>
@@ -233,9 +250,8 @@ const initApiGetCall = async () => {
 
   </div>
   <TransitionRoot appear :show="isOpen" >
-    <Dialog  @close="closeModal" class="relative z-10">
+    <Dialog class="relative z-10">
       <TransitionChild
-        
         enter="duration-300 ease-out"
         enter-from="opacity-0"
         enter-to="opacity-100"
@@ -251,7 +267,6 @@ const initApiGetCall = async () => {
           class="flex min-h-full items-center justify-center p-4 text-center"
         >
           <TransitionChild
-            
             enter="duration-300 ease-out"
             enter-from="opacity-0 scale-95"
             enter-to="opacity-100 scale-100"
@@ -263,7 +278,7 @@ const initApiGetCall = async () => {
               class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all divide-y divide-gray-500"
             > -->
             <DialogPanel
-              class="w-full p-2 calendar-height max-w-md transform overflow-hidden shadow-none text-left align-middle transition-all divide-y divide-gray-300"
+              class="w-full p-2 calendar-height max-w-md transform shadow-none text-left align-middle transition-all divide-y divide-gray-300"
               >
               <DialogTitle
                 class="bg-white leading-6 rounded-t-lg p-3 shadow-right"
@@ -272,9 +287,24 @@ const initApiGetCall = async () => {
                   조건 설정
                 </div>
               </DialogTitle>
-              <div class="pt-2 bg-white flex gap-2 p-3 shadow-right">
-                <FormsDatePicker :datePicker="startDate" @change-date="value => startDate = value"/>
-                <FormsDatePicker :datePicker="endDate" @change-date="value => endDate = value"/>
+              <div class="pt-2 bg-white flex flex-col gap-2 p-3 shadow-right">
+                <div class="flex flex-row gap-2">
+                  <FormsDatePicker :datePicker="startDate" @change-date="value => startDate = value"/>
+                  <FormsDatePicker :datePicker="endDate" @change-date="value => endDate = value"/>
+                </div>
+                <div class="flex flex-row gap-2">
+                  <USelectMenu
+                    class="w-1/2 pr-1"
+                    v-model="searchTabs" 
+                    :options="columns" 
+                    multiple
+                    placeholder="All Select" 
+                    value-attribute="label" 
+                    option-attribute="label"
+                  />
+                  <div></div>                 
+                </div>
+
               </div>
 
               <div class="pt-4 bg-white rounded-b-lg p-3 shadow-right">

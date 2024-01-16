@@ -16,6 +16,8 @@
           </UButton>
         </UForm>
       </div>
+      <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    </div>      
     </UContainer>
   </NuxtLayout>
 </template>
@@ -40,7 +42,7 @@ const state = reactive({
 const validate = (state: any): FormError[] => {
   const errors = []
   if (!state.username) errors.push({ path: "email", message: 'Required' })
-  if (!state.password) errors.push({ path: "password", message: "Required" })
+  // if (!state.password) errors.push({ path: "password", message: "Required" })
   return errors
 };
   

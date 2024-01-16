@@ -11,7 +11,7 @@ const emit = defineEmits(['changeDate']);
 const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd', { locale: koLocale }));
 </script>
 <template>
-    <div></div>
+  <div>
     <VDatePicker v-model="date" :popover="false" @click="handleDateChange()">
         <template #default="{ togglePopover, inputValue, inputEvents }">
           <div>
@@ -34,7 +34,8 @@ const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd'
             </UInput>            
           </div>
         </template>
-    </VDatePicker>        
+    </VDatePicker>
+  </div>    
 </template>
 
   
