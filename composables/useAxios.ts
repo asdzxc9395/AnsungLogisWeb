@@ -3,6 +3,7 @@
   creator : kyn8330
 */
 import axios from "axios";
+import { useDialogPopup } from "~/composables/useDialogPopup.js";
 
 export const inst = () => {
   const runtimeConfig = useRuntimeConfig();
@@ -23,11 +24,18 @@ export const inst = () => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 404) {
-        // 404 not found --> error page redirect - 404
+        // 404 not found
       } else if (error.response && error.response.status === 500) {
-        // 500 internal server err --> error page redirect - 500
+        // 500 internal server err
       } else {
       }
+
+      const errToast = useToastPopup();
+      errToast.actToast(
+        "API 호출 결과 : " + error.response.status,
+        error.response.data.message || error.response.data.error,
+        "error"
+      );
       return Promise.reject(error);
     }
   );
