@@ -61,7 +61,7 @@ export const useToastPopup = defineStore("Toast", {
       this.title = title;
       this.msg = msg;
       this.type = type;
-      this.closeBtn = closeBtn;
+      this.closeBtn = closeBtn ? closeBtn : this.$state.closeBtn;
       this.show = true;
       return true;
     },
