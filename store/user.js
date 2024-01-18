@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import axios from "axios";
 
-
 const baseSettings = {
+    // 사용자 토큰 관리
     token: {},
     authStore: {
         code_challenge: '',
@@ -11,15 +11,31 @@ const baseSettings = {
     },
     name: '',
     avatarUrl: '',
-    loggedIn: false
+    loggedIn: false,
+    // 즐겨찾기와 관련된 URL
+    favoritesURL: '/favorites',
+
+    // 이전에 들어갔던 URL의 검색 상태
+    searchForm: [{
+        path: '',       // 이전 URL 경로
+        searchStatus: '' // 이전 URL의 검색 상태
+    }],
+    
+    // 사용자 정보 관리
+    userInfo: {
+        userId: '',
+        username: '',
+        email: ''
+        // 추가적인 사용자 정보 필드들
+    }
 }
 
-export const useAuthStoreComposable = defineStore('authComposable', {
-
+export const useUserStore = defineStore('user', {
     state: () => {
         const Crypto = useCrypto()
         const base = { ...baseSettings };
         return {
+            base: base,
             user: Crypto.encryptObject(base)
         }
     },
@@ -50,6 +66,9 @@ export const useAuthStoreComposable = defineStore('authComposable', {
         }
     },
     actions: {
+        init() {
+            this.$reset();
+        },
         updateState(state)
         {
             const Crypto = useCrypto()

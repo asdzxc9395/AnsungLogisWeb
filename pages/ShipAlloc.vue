@@ -162,10 +162,10 @@ const initApiGetCall = async () => {
   <UContainer class="">
   <UCard class="mb-0 p-0.5 relative">
     <div class="flex items-center justify-between w-full relative">
-      <div class="text-4xl font-semibold text-blue-900 w-1/3">
+      <div class="text-3xl font-semibold text-blue-900 w-1/3">
         피킹수동할당
       </div>
-      <div class="gap-2 flex relative">
+      <div class="gap-2 flex relative items-center">
         <UInput 
           v-model="q" 
           @keydown="page = 1"
@@ -173,7 +173,6 @@ const initApiGetCall = async () => {
           placeholder="Filter tableItems..." 
           class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
-
         <UButton 
           icon="i-mdi-microsoft-excel" 
           class="text-gray-700 hover:bg-gray-100 rounded-md" 
@@ -288,13 +287,16 @@ const initApiGetCall = async () => {
                 </div>
               </DialogTitle>
               <div class="pt-2 bg-white flex flex-col gap-2 p-3 shadow-right">
-                <div class="flex flex-row gap-2">
-                  <FormsDatePicker :datePicker="startDate" @change-date="value => startDate = value"/>
-                  <FormsDatePicker :datePicker="endDate" @change-date="value => endDate = value"/>
+                <div class="flex flex-row gap-2 items-center">
+                  <FormsLabel :line="'입고일자'"></FormsLabel>
+                  <FormsDatePicker class="w-1/3" :datePicker="startDate" @change-date="value => startDate = value"/>
+                  <FormsLabel :line="'출고_일자'"></FormsLabel>
+                  <FormsDatePicker class="w-1/3" :datePicker="endDate" @change-date="value => endDate = value"/>
                 </div>
-                <div class="flex flex-row gap-2">
+                <div class="flex flex-row gap-2 items-center">
+                  <FormsLabel :line="'조회조건'"></FormsLabel>
                   <USelectMenu
-                    class="w-1/2 pr-1"
+                    class="w-1/3"
                     v-model="searchTabs" 
                     :options="columns" 
                     multiple

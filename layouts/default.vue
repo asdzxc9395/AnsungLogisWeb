@@ -10,8 +10,10 @@
 <script setup>
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+import { useUserStore } from '~/store/user'; // import the auth store we just created
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue';
+import * as testApi from "~/api/testApi";
 
 const router = useRouter();
 
@@ -24,6 +26,23 @@ const logout = () => {
   router.push('/login');
 };
 
+onMounted(() => {
+  if(useCookie('token').value) {
+    // getUser();
+  }
+});
+
+const getUser = async () => {
+  const datainfo = {
+    params: {
+      DATE_FR: startDate.value,
+      DATE_TO: endDate.value,
+    },
+  };
+  const resp = await testApi.initGet(datainfo, "user/입고 조회");
+  isOpen.value = false
+  tableItems.value = resp.data;
+};
 // const { data } = await useFetch('/api/menu')
 // let menus = data.value
 let menus = [

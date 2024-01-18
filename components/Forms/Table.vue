@@ -154,7 +154,6 @@ export default defineComponent({
     const appConfig = useAppConfig()
 
     const ui: any = computed<Partial<typeof appConfig.ui.table>>(() => defu({}, props.ui, appConfig.ui.table))
-    console.log(appConfig.ui.table.default)
     const columns = computed(() => props.columns ?? Object.keys(props.rows[0] ?? {}).map((key) => ({ key, label: capitalize(key), sortable: false })))
 
     const sort = ref(defu({}, props.sort, { column: null, direction: 'asc' }))
