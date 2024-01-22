@@ -7,25 +7,21 @@
 -->
 <script setup>
 import { ref, onMounted, watchEffect, defineComponent } from 'vue';
-import {
-  TransitionRoot,
-  TransitionChild,
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-} from '@headlessui/vue'
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
+import {TransitionRoot,TransitionChild,Dialog,DialogPanel,DialogTitle} from '@headlessui/vue'
 import * as testApi from "~/api/testApi";
+import { useUserStore } from '~/store/user'; // import the auth store we just created
 
-const value = ref('')
+const { setLog, getSearchList } = useUserStore();
+
 // Modal
 const isOpen = ref(false)
+
 // excel 처리
 const { exportExcel } = useExcel();
 const downloadExcel =() => {
   exportExcel(columns, tableItems.value, 'test')
 }
+
 // Table Search기능 + Pagination, selected 처리
 const columns = [{
   key: 'receiptDt',
@@ -56,6 +52,7 @@ const columns = [{
   label: 'pcsWorkQty',
   sortable: true
 }]
+
 const tableItems = ref([])
 const selected = ref([])
 const page = ref(1)
@@ -124,10 +121,12 @@ const chartData = reactive({
 const render = (slideIndex) => {
   activeSlide.value = slideIndex;
 };
+
 const selectTab = (tab) => {
   selectedTab.value = tab;
   render(tab.id);
 }
+
 if(process.client) {
   watchEffect(() => {
     let gapWidth =  activeSlide.value == 1 ? '0' : '256';
@@ -145,16 +144,29 @@ if(process.client) {
 }
 
 const initApiGetCall = async () => {
-  const datainfo = {
-    params: {
-      DATE_FR: startDate.value,
-      DATE_TO: endDate.value,
-    },
-  };
-  const resp = await testApi.initGet(datainfo, "user/입고 조회");
-  // const resp = await testApi.testApiCall(datainfo, "user/login", "POST");
-  isOpen.value = false
-  tableItems.value = resp.data;
+  try {
+    const datainfo = {
+      params: {
+        DATE_FR: startDate.value,
+        DATE_TO: endDate.value,
+      },
+    };
+    
+    const resp = await testApi.initGet(datainfo, "user/입고 조회");
+    isOpen.value = false
+    tableItems.value = resp.data;
+
+    setLog({
+      // isDate, isTextField, isSelect
+      // beforeDate, afterDate / model / isActive
+      name: 'isDate', 
+      data: {beforeDate: startDate.value, afterDate: endDate.value},
+      path: window.location.pathname,
+    })
+    console.log(getSearchList())
+  } catch (error) {
+    console.log(error)
+  }  
 };
 </script>
 

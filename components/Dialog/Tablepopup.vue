@@ -9,8 +9,7 @@
       :class="modalLength"
     -->
     <div
-      class="fixed top-1/4 left-1/4 flex min-h-[33%] max-h-[75%] justify-center bg-white ring-4 ring-opacity-50 rounded-md items-center"
-      :class="modalLength"
+      class="fixed top-1/4 left-1/4 flex justify-center bg-white ring-4 ring-opacity-50 rounded-md items-center w-1/2"
     >
       <DialogPanel class="justify-center align-middle w-full h-full">
         <!-- header part -->
@@ -28,7 +27,25 @@
         <!-- body part -->
         <div class="w-full h-fit border-t-4 border-blue-300">
           <div class="w-full h-full p-3">
+            <!-- TODO:: contents 분기처리 
+              - Question string
+              - Table search Data
+              - ...
+            -->
+            <!-- test button part -->
+            <UTable :rows="filteredRows" :columns="columns">
+               <template #searchCondition-data="{ row }">
+                <span v-if="row.searchCondition.isDate.isActive">{{ row.searchCondition.isDate.beforeDate + '_' + row.searchCondition.isDate.afterDate }}</span>
+                <span v-if="row.searchCondition.isTextField.isActive">{{ row.searchCondition.isDate.beforeDate + '_' + row.searchCondition.isDate.afterDate }}</span>
+                <span v-if="row.searchCondition.isSelect.isActive">{{ row.searchCondition.isDate.beforeDate + '_' + row.searchCondition.isDate.afterDate }}</span>
+              </template>
 
+              <template #other-data="{ row }">
+                <UDropdown :items="items(row)">
+                  <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                </UDropdown>
+              </template>
+            </UTable>
           </div>
         </div>
         <!-- footer part -->
@@ -67,7 +84,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
 import {
   Dialog,
   DialogPanel,
@@ -76,10 +93,13 @@ import {
 } from "@headlessui/vue";
 import { XMarkIcon } from "@heroicons/vue/24/solid";
 import { useDialogPopup } from "~/composables/useDialogPopup.js";
+import { useUserStore } from '~/store/user';
 
 const actDialog = useDialogPopup();
-
 const emit = defineEmits(["modal-result-value-test"]);
+
+const { getSearchList } = useUserStore();
+const searchList = ref([]);
 
 const btnType = computed(() => actDialog.btnType);
 const title = computed(() => actDialog.title);
@@ -89,12 +109,59 @@ const closeBtn = computed(() => actDialog.closeBtn);
 const modalWidth = computed(() => actDialog.customWidth);
 const modalHeight = computed(() => actDialog.customHeight);
 
+const columns = [{
+  key: 'searchDate',
+  label: '검색일자',
+  sortable: true
+}, {
+  key: 'menuName',
+  label: '메뉴명',
+  sortable: true
+}, {
+  key: 'searchCondition',
+  label: '검색조건',
+  sortable: true
+},{
+  key: 'other'
+}];
+
+const items = (row) => [
+  [{
+    label: 'Edit',
+    icon: 'i-heroicons-pencil-square-20-solid',
+    click: () => console.log('Edit', row.id)
+  }, {
+    label: 'Duplicate',
+    icon: 'i-heroicons-document-duplicate-20-solid'
+  }], [{
+    label: 'Archive',
+    icon: 'i-heroicons-archive-box-20-solid'
+  }, {
+    label: 'Move',
+    icon: 'i-heroicons-arrow-right-circle-20-solid'
+  }], [{
+    label: 'Delete',
+    icon: 'i-heroicons-trash-20-solid'
+  }]
+]
+
+const filteredRows = computed(() => {
+  if(show) {
+    searchList.value = getSearchList();
+    return toRaw(searchList.value);
+  } else {
+    return
+  }
+});
+
+// watch(show, value => {
+// }, {deep: true, immediate: true})
+
 const modalLength = computed(() => {
   return modalWidth.value + " " + modalHeight.value;
 });
 
 const closeFunc = async (val) => {
-  console.log(val)
   // returnValue 전달
   emit("modal-result-value-test", val);
 

@@ -80,7 +80,7 @@ export default defineAppConfig({
       wrapper: "border-collapse relative overflow-x-auto",
       base: "min-w-full table-fixed",
       divide: "divide-y divide-gray-300 dark:divide-gray-700",
-      thead: "sticky z-10 top-0 bg-white",
+      thead: "sticky z-5 top-0 bg-white",
       //
       tbody: "divide-y bg-slate-50 divide-gray-200 dark:divide-gray-800", 
       tr: {

@@ -56,8 +56,8 @@
           </div>
         </div>
       </div>
-      <FormsDialog :is-open="isOpen" :dialog-data="dialogData" ></FormsDialog>      
     </nav>
+    <DialogTablepopup @modal-result-value-test="returnModalRtn" />
   </div>
 </template>
 
@@ -86,6 +86,7 @@ import {
 import { ChevronDownIcon, HeartIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+import { useUserStore } from '~/store/user'; // import the auth store we just created
 import { useDialogPopup } from "~/composables/useDialogPopup.js";
 
 const { menus } = defineProps(['menus']);
@@ -95,10 +96,8 @@ const router = useRouter();
 const { logUserOut } = useAuthStore(); // use authenticateUser action from  auth store
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
 
-const logout = () => {
-  logUserOut();
-  router.push('/login');
-};
+const headerBg = ref('bg-slate-100')
+
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: HeartIcon },
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -112,7 +111,11 @@ const callsToAction = [
   { name: 'Contact sales', href: '#', icon: PhoneIcon },
 ]
 
-const headerBg = ref('bg-slate-100')
+const logout = () => {
+  logUserOut();
+  router.push('/login');
+};
+
 const changeBg = (e: any) => {
 if(e) {
   headerBg.value = 'bg-slate-200'
@@ -121,8 +124,6 @@ if(e) {
 }
 }
 
-const isOpen = ref(false)
-const dialogData = ref([''])
 const items = [
   [{
     label: 'mhcnc@mhcnc.com',
@@ -135,7 +136,7 @@ const items = [
     label: '조회기록',
     icon: 'i-heroicons-clipboard-document-list',
     click: () => {
-      isOpen.value = true
+      initDialog('default', 'popup Contents');
     }
   }], [{
     label: 'Logout',
@@ -145,6 +146,29 @@ const items = [
     }
   }]
 ]
+const initDialog = (
+  title: string,
+  data?: any,
+  btnType?: string,
+  width?: string,
+  height?: string,
+  closeBtn?: boolean
+) => {
+  const ModalDialog = useDialogPopup();
+  // const { getLog } = useUserStore(); // use authenticateUser action from  auth store
+  ModalDialog.actDialog(title, data, btnType, width, height, closeBtn);
+  // 기본적으로는 width, height, closeBtn을 재정의할 일이 없도록 처리할 예정,
+  // 통상 호출 : ModalDialog.actDialog(title, data, btnType)
+  console.log(
+    "after close인지 확인, ModalDialog.rtnValue:: ",
+    ModalDialog.rtnValue
+  );
+};
+
+function returnModalRtn(rtnVal: any) {
+  console.log("returnValue:: ", rtnVal);
+  return rtnVal;
+}
 
 </script>
 <style scoped>
