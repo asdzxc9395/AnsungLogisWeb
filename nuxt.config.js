@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       baseURL: process.env.API_URL_BROWSER,
     },
   },
+
   build: {
     // You can extend webpack config here
     transpile: ["vue-bundle"],
