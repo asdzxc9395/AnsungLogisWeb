@@ -1,8 +1,9 @@
 export default defineNuxtConfig({
   ssr: false,
+  spaLoadingTemplate: 'spa-loading-template.html',
   colorMode: {
     preference: 'light'
-  },  
+  }, 
   devtools: { enabled: true },
   runtimeConfig: {
     public: {

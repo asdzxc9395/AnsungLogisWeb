@@ -148,7 +148,8 @@ const items = (row) => [
 const filteredRows = computed(() => {
   if(show) {
     searchList.value = getSearchList();
-    return toRaw(searchList.value);
+    console.log(searchList)
+    return !getSearchList() ? [] : toRaw(searchList.value);
   } else {
     return
   }

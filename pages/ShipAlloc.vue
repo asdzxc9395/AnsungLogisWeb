@@ -7,12 +7,14 @@
 -->
 <script setup>
 import { ref, onMounted, watchEffect, defineComponent } from 'vue';
+import { useLoadingIndicator } from '#imports'
 import {TransitionRoot,TransitionChild,Dialog,DialogPanel,DialogTitle} from '@headlessui/vue'
 import * as testApi from "~/api/testApi";
 import { useUserStore } from '~/store/user'; // import the auth store we just created
 
 const { setLog, getSearchList } = useUserStore();
-
+const app = useNuxtApp()
+app.callHook('page:start')
 // Modal
 const isOpen = ref(false)
 
@@ -142,9 +144,11 @@ if(process.client) {
     watchEffect();
   });
 }
+const nuxtApp = useNuxtApp()
 
 const initApiGetCall = async () => {
   try {
+    nuxtApp.callHook('page:loading:start')
     const datainfo = {
       params: {
         DATE_FR: startDate.value,
@@ -163,7 +167,8 @@ const initApiGetCall = async () => {
       data: {beforeDate: startDate.value, afterDate: endDate.value},
       path: window.location.pathname,
     })
-    console.log(getSearchList())
+    nuxtApp.callHook('page:loading:end')
+    // console.log(getSearchList())
   } catch (error) {
     console.log(error)
   }  
@@ -185,6 +190,20 @@ const initApiGetCall = async () => {
           placeholder="Filter tableItems..." 
           class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
+        <UButton 
+          class="text-gray-700 hover:bg-gray-100 rounded-md" 
+          variant="outline"
+          @click="testTrue"
+        >
+          true
+        </UButton>
+        <UButton 
+          class="text-gray-700 hover:bg-gray-100 rounded-md" 
+          variant="outline"
+          @click="testFalse"
+        >
+          false
+        </UButton>
         <UButton 
           icon="i-mdi-microsoft-excel" 
           class="text-gray-700 hover:bg-gray-100 rounded-md" 

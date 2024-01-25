@@ -1,4 +1,5 @@
 <template>
+  <Loading :loading="isLoading" />
   <div class="flex bg-slate-100 flex-auto relative">
     <WebHeader :menus="menus"/>
     <div class="max-x-full flex-auto">
@@ -12,7 +13,7 @@ import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pini
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
 import { useUserStore } from '~/store/user'; // import the auth store we just created
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import * as testApi from "~/api/testApi";
 
 const router = useRouter();
@@ -20,6 +21,18 @@ const router = useRouter();
 const { logUserOut } = useAuthStore(); // use authenticateUser action from  auth store
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
 const route = useRoute();
+
+const nuxtApp = useNuxtApp();
+const isLoading = ref(false);
+
+nuxtApp.hook("page:loading:start", () => {
+  isLoading.value = true;
+});
+nuxtApp.hook("page:loading:end", () => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 500);
+});
 
 const logout = () => {
   logUserOut();
