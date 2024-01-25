@@ -3,7 +3,9 @@ import { ref, toRefs, onMounted, defineProps, defineEmits } from 'vue';
 import { format } from 'date-fns';
 import koLocale from 'date-fns/locale/ko';
 
-const date = ref(new Date());
+const d = defineProps(['datePicker'])
+console.log(d.datePicker)
+const date = ref(d.datePicker);
 const emit = defineEmits(['changeDate']);
 
 const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd', { locale: koLocale }));
