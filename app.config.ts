@@ -5,10 +5,12 @@ export default defineAppConfig({
     card: {
       background: "bg-white dark:bg-white",
       ring: "ring-1 ring-gray-200 dark:ring-gray-200",
+      base: "overflow-visible",
       mobile: {
         padding: 'px-2 py-3 sm:p-7', // 원하는 패딩 값으로 변경
       },
       body: {
+        base: "",
         padding: 'px-2 py-3 sm:p-4', // 원하는 패딩 값으로 변경
       },
       header: {
@@ -75,36 +77,21 @@ export default defineAppConfig({
       // },
     },
     table: {
-      default: {
-        sortAscIcon: 'i-octicon-sort-asc-24',
-        sortDescIcon: 'i-octicon-sort-desc-24',
-        sortButton: {
-          icon: 'i-octicon-arrow-switch-24'
-        },
-        loadingState: {
-          icon: 'i-octicon-sync-24'
-        },
-        emptyState: {
-          icon: 'i-octicon-database-24'
-        }
-      },
-      // .wrapper .tableBox{position: relative; top: 50px; left: 50px; width: 700px; height: 100px; overflow-y: scroll; border-top: 2px solid dodgerblue;}
-      // .tableData{width: 100%; border-collapse: collapse; text-align: center;}
-      // .tableData thead tr th{position: sticky; top: 0; background: #ebeaea;}
-      // .tableData thead tr th,
-      // .tableData tbody tr td{padding: 15px 0; box-sizing: border-box; border-bottom: 1px solid #dedede; border-right: 1px solid #ddd; word-break: break-all;}
-      base: "border-collapse", 
-      thead: "sticky z-10 top-0 bg-white",
-      tbody: "divide-y bg-slate-50 divide-gray-200 dark:divide-gray-800",
+      wrapper: "border-collapse relative overflow-x-auto",
+      base: "min-w-full table-fixed",
+      divide: "divide-y divide-gray-300 dark:divide-gray-700",
+      thead: "sticky z-5 top-0 bg-white",
+      //
+      tbody: "divide-y bg-slate-50 divide-gray-200 dark:divide-gray-800", 
       tr: {
         base: "",
-        selected: "bg-gray-50 dark:bg-gray-800/50",
-        active: "hover:bg-gray-50 dark:hover:bg-gray-800/50 cursor-pointer"
+        selected: "bg-slate-50 dark:bg-gray-800/50",
+        active: "hover:bg-white dark:hover:bg-gray-800/50 cursor-pointer"
       },
       th: {
-        base: "sticky top-0",
+        base: "sticky top-0 text-left rtl:text-right",
         padding: "px-1 py-1",
-        color: "text-gray-900 dark:text-white",
+        color: "text-gray-500 dark:text-white",
         font: "font-semibold",
         size: "text-xs"
       },
@@ -114,7 +101,40 @@ export default defineAppConfig({
         color: "text-gray-500 dark:text-gray-400",
         font: "",
         size: "text-xs"
-      },      
+      },
+      checkbox: {
+        "padding": "ps-4"
+      },               
+      default: {
+        sortAscIcon: "i-mdi-arrow-collapse-up",
+        sortDescIcon: "i-mdi-arrow-collapse-down",
+        sortButton: {
+          "icon": "i-heroicons-arrows-up-down-20-solid",
+          "trailing": true,
+          "square": true,
+          "color": "gray",
+          "variant": "ghost",
+          "class": "-m-1.0"
+        },
+        "loadingState": {
+          "icon": "i-heroicons-arrow-path-20-solid",
+          "label": "Loading..."
+        },
+        "emptyState": {
+          "icon": "i-heroicons-circle-stack-20-solid",
+          "label": "No items."
+        }        
+      },
+      loadingState: {
+        "wrapper": "flex flex-col items-center justify-center flex-1 px-6 py-14 sm:px-14",
+        "label": "text-sm text-center text-gray-900 dark:text-white",
+        "icon": "w-6 h-6 mx-auto text-gray-400 dark:text-gray-500 mb-4 animate-spin"
+      },
+      emptyState: {
+        "wrapper": "flex flex-col items-center justify-center flex-1 px-6 py-14 sm:px-14",
+        "label": "text-sm text-center text-gray-900 dark:text-white",
+        "icon": "w-6 h-6 mx-auto text-gray-400 dark:text-gray-500 mb-4"
+      },        
     },    
     // button: {
     //   default: {

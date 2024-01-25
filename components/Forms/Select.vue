@@ -1,21 +1,3 @@
-<!-- <script>
-import { ref } from 'vue';
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from '@headlessui/vue'
-import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
-
-export default {
-  name: 'noneVariantSelect',
-  props: {
-    people: Array,
-  },
-  setup(props) {
-    const selectedPerson = ref(props.people[0]);
-    return {
-      selectedPerson,
-    };
-  },
-};
-</script> -->
 <script setup>
 import { ref, defineProps } from 'vue';
 import {

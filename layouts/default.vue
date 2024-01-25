@@ -1,4 +1,5 @@
 <template>
+  <Loading :loading="isLoading" />
   <div class="flex bg-slate-100 flex-auto relative">
     <WebHeader :menus="menus"/>
     <div class="max-x-full flex-auto">
@@ -10,8 +11,10 @@
 <script setup>
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+import { useUserStore } from '~/store/user'; // import the auth store we just created
 import { useRoute } from 'vue-router';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import * as testApi from "~/api/testApi";
 
 const router = useRouter();
 
@@ -19,14 +22,67 @@ const { logUserOut } = useAuthStore(); // use authenticateUser action from  auth
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
 const route = useRoute();
 
+const nuxtApp = useNuxtApp();
+const isLoading = ref(false);
+
+nuxtApp.hook("page:loading:start", () => {
+  isLoading.value = true;
+});
+nuxtApp.hook("page:loading:end", () => {
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 500);
+});
+
 const logout = () => {
   logUserOut();
   router.push('/login');
 };
 
+onMounted(() => {
+  if(useCookie('token').value) {
+    // getUser();
+  }
+});
+
+const getUser = async () => {
+  const datainfo = {
+    params: {
+      DATE_FR: startDate.value,
+      DATE_TO: endDate.value,
+    },
+  };
+  const resp = await testApi.initGet(datainfo, "user/입고 조회");
+  isOpen.value = false
+  tableItems.value = resp.data;
+};
 // const { data } = await useFetch('/api/menu')
 // let menus = data.value
 let menus = [
+    {
+      "formName" : "Bookmark",
+      "name": "즐겨찾기",
+      "subs": [
+        {
+          "MENU_URL": "Bookmark_01",
+          "MENU_SEQ": 1,
+          "MENU_NM": "기준정보",
+          "SUBMENU_SEQ": 1,
+          "SUBMENU_NM": "품목관리",
+          "FORM_NAME": "BookmarkSku",
+          "REG_DT": "2022-02-07 00:00:00.0000000"
+        },
+        {
+          "MENU_URL": "Bookmark_02",
+          "MENU_SEQ": 1,
+          "MENU_NM": "기준정보",
+          "SUBMENU_SEQ": 1,
+          "SUBMENU_NM": "거래처관리",
+          "FORM_NAME": "BookmarkCust",
+          "REG_DT": "2022-02-14 00:00:00.0000000"
+        },
+      ]
+    },
     {
       "formName" : "Master",
       "name": "기준정보",

@@ -4,14 +4,16 @@ import { format } from 'date-fns';
 import koLocale from 'date-fns/locale/ko';
 
 const d = defineProps(['datePicker'])
-console.log(d.datePicker)
 const date = ref(d.datePicker);
 const emit = defineEmits(['changeDate']);
 
 const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd', { locale: koLocale }));
+onMounted(() => {
+  handleDateChange()
+})
 </script>
 <template>
-    <div></div>
+  <div>
     <VDatePicker v-model="date" :popover="false" @click="handleDateChange()">
         <template #default="{ togglePopover, inputValue, inputEvents }">
           <div>
@@ -34,7 +36,8 @@ const handleDateChange = () =>emit('changeDate', format(date.value, 'yyyy-MM-dd'
             </UInput>            
           </div>
         </template>
-    </VDatePicker>        
+    </VDatePicker>
+  </div>    
 </template>
 
   
