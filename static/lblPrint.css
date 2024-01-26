@@ -1,0 +1,114 @@
+/* .lblPrtCanvas {
+  margin-top: 10px;
+  width: 11cm;
+  height: 7.2cm;
+}
+
+.pt-10 {
+  padding-top: 10px;
+}
+
+.pb-10 {
+  padding-bottom: 10px;
+}
+
+.pt-30 {
+  padding-top: 30px;
+}
+
+.pb-30 {
+  padding-bottom: 30px;
+}
+
+.fs-50 {
+  font-size: 50px;
+}
+
+.fs-25 {
+  font-size: 25px !important;
+}
+
+.fs-20 {
+  font-size: 20px !important;
+}
+
+.title {
+  text-align: center;
+  text-decoration: underline;
+}
+
+.fl {
+  float: left;
+}
+
+.fr {
+  float: right;
+}
+
+.text-bold {
+  font-weight: bold !important;
+}
+
+.header-font {
+  background-color: white !important;
+  font-size: 16px !important;
+  padding: 2px !important;
+}
+
+.body-font {
+  padding: 2px !important;
+  font-size: 16px !important;
+} */
+
+/* footer */
+/* .ve-table-footer-td {
+  background-color: rgb(235, 235, 235) !important;
+}
+
+.v-application {
+  line-height: 0 !important;
+} */
+
+/* landscape (가로모드) / portrait (세로모드) */
+@page {
+  /* size: A4 landscape; */
+  size: portrait;
+  /*여백최소화*/
+  /* margin: 0; */
+  /* padding: 2mm; */
+  /* margin: 0 3mm 0 0; */
+  margin: 3mm;
+  /* margin: 3mm 5mm 3mm 3mm; */
+  /* margin: 2mm; */
+  page-break-after: always;
+}
+
+@media print {
+  @page {
+    size: 11cm 7.2cm portrait;
+    margin: 0;
+    padding: 2mm;
+  }
+
+  .ve-table-footer-tr,
+  .ve-table-footer-td,
+  .ve-table-header-tr {
+    background-color: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .ve-table-border-x th,
+  .ve-table-border-y th {
+    /* border: 1px solid black !important; */
+    /* border-top: 1px solid black !important;
+    border-left: 1px solid black !important; */
+  }
+
+  .ve-table-border-y td,
+  .ve-table-border-x td {
+    /* border: 1px solid black !important; */
+    /* border-bottom: 1px solid black !important;
+    border-left: 1px solid black !important; */
+  }
+}

@@ -13,6 +13,8 @@
                             --> 전역변수 처리예정
                             --> 현 단계에서는 버튼 개수 기준으로 구분 가능하지만,
                                 확장성 고려 [ OK, YES/NO, NONE ] 기준 초안 작성
+          - isTable       : 팝업 내 Grid 여부
+                            default : false
           - show          : 모달 활성화여부
                             default : true
           - closeBtn      : 닫기버튼 활성화여부 
@@ -38,6 +40,8 @@ export const useDialogPopup = defineStore("actDialog", {
       title: "",
       data: "",
       btnType: "OK",
+      isTable: false,
+      columns: [{}],
       show: false,
       closeBtn: true,
       customWidth: "w-1/2",
@@ -47,7 +51,7 @@ export const useDialogPopup = defineStore("actDialog", {
   },
   getters: {},
   actions: {
-    async actDialog(title, data, btnType, width, height, closeBtn) {
+    async actDialog(title, data, btnType, isTable, width, height, closeBtn) {
       try {
         // case cover : btnType === "NONE" && closeBtn === false
         // ==> 화면 새로고침 전에 모달 창을 닫을 직관적인 방법이 없음
@@ -56,16 +60,38 @@ export const useDialogPopup = defineStore("actDialog", {
           closeBtn = true;
         }
 
-        await this.setDialog(title, data, btnType, width, height, closeBtn);
+        await this.setDialog(
+          title,
+          data,
+          btnType,
+          isTable,
+          width,
+          height,
+          closeBtn
+        );
       } catch (error) {
         console.error("error:: ", error);
       }
     },
 
-    async setDialog(title, data, btnType, width, height, closeBtn) {
+    async setDialog(title, data, btnType, isTable, width, height, closeBtn) {
       this.title = title;
       this.data = data;
       this.btnType = btnType || this.$state.btnType;
+      this.isTable = isTable || this.$state.isTable;
+      if (isTable) {
+        const col = Object.keys(data[0]);
+        const rtn = [];
+
+        col.forEach((row) => {
+          rtn.push({
+            key: row,
+            label: row,
+          });
+        });
+
+        this.columns = rtn || this.$state.columns;
+      }
       this.customWidth = width || this.$state.customWidth;
       this.customHeight = height || this.$state.customHeight;
       this.closeBtn = closeBtn || this.$state.closeBtn;

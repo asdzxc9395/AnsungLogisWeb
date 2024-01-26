@@ -27,8 +27,31 @@
         </div>
         <!-- body part -->
         <div class="w-full h-fit border-t-4 border-blue-300">
-          <div class="w-full h-full p-3">
-
+          <div class="w-full max-h-32 h-fit p-3">
+            <UTable
+              v-if="isTable"
+              :rows="data"
+              :columns="columns"
+              class="w-full max-h-32 h-fit bg-slate-50 rounded"
+            />
+            <span
+              v-else
+              class="w-full max-h-32 h-fit flex overflow-scroll text-ellipsis"
+            >
+              {{ data }}
+            </span>
+            <!-- test button part -->
+            <div class="w-full h-1/4">
+              <UButton type="button" @click="convertBtnType('OK')">
+                OK 버튼 확인
+              </UButton>
+              <UButton type="button" @click="convertBtnType('YN')">
+                YES/NO 버튼 확인
+              </UButton>
+              <UButton type="button" @click="convertBtnType('NONE')">
+                NONE(버튼없음) 확인
+              </UButton>
+            </div>
           </div>
         </div>
         <!-- footer part -->
@@ -84,6 +107,7 @@ const emit = defineEmits(["modal-result-value-test"]);
 const btnType = computed(() => actDialog.btnType);
 const title = computed(() => actDialog.title);
 const data = computed(() => actDialog.data);
+const isTable = computed(() => actDialog.isTable);
 const show = computed(() => actDialog.show);
 const closeBtn = computed(() => actDialog.closeBtn);
 const modalWidth = computed(() => actDialog.customWidth);
@@ -92,6 +116,8 @@ const modalHeight = computed(() => actDialog.customHeight);
 const modalLength = computed(() => {
   return modalWidth.value + " " + modalHeight.value;
 });
+
+const columns = computed(() => actDialog.columns);
 
 const closeFunc = async (val) => {
   console.log(val)
