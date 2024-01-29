@@ -136,7 +136,7 @@ if(process.client) {
     document.querySelectorAll('.container .inner div').forEach((divEl) => {
       divEl.style.transform = transformValue;
     });
-    // console.log(document.getElementsByClassName('inner-1'))
+    // console.log(document.('inner-1'))
   });
 
   onMounted(() => {
@@ -190,20 +190,6 @@ const initApiGetCall = async () => {
           placeholder="Filter tableItems..." 
           class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
-        <UButton 
-          class="text-gray-700 hover:bg-gray-100 rounded-md" 
-          variant="outline"
-          @click="testTrue"
-        >
-          true
-        </UButton>
-        <UButton 
-          class="text-gray-700 hover:bg-gray-100 rounded-md" 
-          variant="outline"
-          @click="testFalse"
-        >
-          false
-        </UButton>
         <UButton 
           icon="i-mdi-microsoft-excel" 
           class="text-gray-700 hover:bg-gray-100 rounded-md" 

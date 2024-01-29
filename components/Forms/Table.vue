@@ -1,7 +1,7 @@
 <template>
-  <div :class="ui.wrapper">
+  <div :class="ui.wrapper" id="infinite-table">
     <table :class="[ui.base, ui.divide]">
-      <thead :class="ui.thead">
+      <thead :class="ui.thead" style="z-index: 9">
         <tr :class="ui.tr.base">
           <th v-if="modelValue" scope="col" class="ps-4">
             <UCheckbox :checked="indeterminate || selected.length === rows.length" :indeterminate="indeterminate" @change="selected = $event.target.checked ? rows : []" />
@@ -72,8 +72,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { ref, computed, defineComponent, toRaw } from 'vue'
+<script  lang="ts">
+import { ref, computed, defineComponent, toRaw, onMounted, onBeforeUnmount } from 'vue'
 import type { PropType } from 'vue'
 import { capitalize, orderBy } from 'lodash-es'
 import { defu } from 'defu'
@@ -89,6 +89,30 @@ function defaultComparator<T> (a: T, z: T): boolean {
   return a === z
 }
 
+setTimeout(() => {
+
+const divTable = document.querySelector("#infinite-table");
+const table = divTable.getElementsByTagName("tbody")[0];
+
+const loadMore = () => {
+    let row = table.insertRow(-1);
+    row.insertCell(0).innerHTML = '123';
+};
+
+let timer: any;
+divTable.addEventListener("scroll", () => {
+   if (timer) {   
+      clearTimeout(timer); 
+  }
+  timer = setTimeout(() => {
+      const scrollValue = Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop);
+      if (Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop) < 1) {
+        loadMore()
+      }          
+  }, 300);
+})
+}, 2000);
+  
 export default defineComponent({
   props: {
     modelValue: {
@@ -151,6 +175,7 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup (props, { emit }) {
     // TODO: Remove
+
     const appConfig = useAppConfig()
 
     const ui: any = computed<Partial<typeof appConfig.ui.table>>(() => defu({}, props.ui, appConfig.ui.table))
