@@ -31,7 +31,7 @@ export const useToastPopup = defineStore("Toast", {
       show: false,
       closeBtn: true,
       autoClose: true,
-      autoCloseTime: 5000,
+      autoCloseTime: 50000000,
     };
   },
   getters: {},

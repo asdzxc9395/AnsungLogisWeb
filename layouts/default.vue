@@ -1,6 +1,6 @@
 <template>
   <Loading :loading="isLoading" />
-  <div class="flex bg-slate-100 flex-auto relative">
+  <div class="flex bg-gray-100 flex-auto relative">
     <WebHeader :menus="menus"/>
     <div class="max-x-full flex-auto">
       <slot />

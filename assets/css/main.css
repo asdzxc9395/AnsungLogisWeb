@@ -41,25 +41,37 @@ div#__nuxt {
 /* .text-9xl {height: 128px;} */
 
 /* .ScrollBar */
-.scrollBar::-webkit-scrollbar {
+.hideBar {
+    overflow: overlay;
+}
+.hideBar::-webkit-scrollbar {
     width: 8px;  /* 스크롤바의 너비 */
     height:8px;
-    opacity: 0.8;
+    /* background-color: #ffffff; */
+    /* background-color: rgba( 255, 255, 255, 0.1 ) */
 }
 
-.scrollBar::-webkit-scrollbar-thumb {
-    height: 5%; /* 스크롤바의 길이 */
-    width: 5%;
-    background: gray; /* 스크롤바의 색상 */
-    opacity: 0.8;
+.hideBar::-webkit-scrollbar-track {
+    display: none;
+}
+
+.hideBar::-webkit-scrollbar-thumb {
+    /* height: 5%;
+    width: 5%; */
     border-radius: 10px;
+    background: gray;
+    background-color: hsla(0, 0%, 42%, 0.29);
 }
-
-.scrollBar::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.128);  /*스크롤바 뒷 배경 색상*/
-    opacity: 0.8;
+.hideBar::-webkit-scrollbar-corner {
+    height: 3px;
+    width: 3px;
+    /* background-color: #ffffff; */
+    /* background-color: rgba( 255, 255, 255, 0.1 )     */
 }
-
+.hideBar::-webkit-resizer {
+    height: 3px;
+    width: 3px;
+}
 
 /* Table */
 
@@ -77,6 +89,14 @@ div#__nuxt {
     box-shadow: 2px 9px 10px -1px #888;
 }
 /*Layouts*/
+.container {
+    /* padding: 12px 16px; */
+    display: flex;
+    /* align-items: flex-start;
+    flex: 1 0 0;
+    gap: 16px; */
+    width: 100%;
+}
 /* 
 div#__nuxt {
     @apply h-full;

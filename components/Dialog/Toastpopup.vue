@@ -19,56 +19,81 @@
       >
         <div
           v-if="show"
-          class="max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto overflow-hidden"
+          class="inline-flex p-4 items-start gap-4 bg-white rounded-lg pointer-events-auto overflow-hidden"
           :class="typeBorder"
+          style="box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.10), 0px 4px 6px -4px rgba(0, 0, 0, 0.10);"
         >
-          <div class="p-4">
+          <div class="flex items-start gap-3">
             <div class="flex items-start">
-              <div class="flex-shrink-0">
-                <CheckCircleIcon
-                  v-if="type == 'success'"
-                  class="h-6 w-6 text-green-400"
-                  aria-hidden="true"
-                />
-                <XCircleIcon
-                  v-if="type == 'error'"
-                  class="h-6 w-6 text-danger-400"
-                  aria-hidden="true"
-                />
-                <ExclamationCircleIcon
-                  v-if="type == 'warning'"
-                  class="h-6 w-6 text-warning-400"
-                  aria-hidden="true"
-                />
-                <InformationCircleIcon
-                  v-if="type == 'info'"
-                  class="h-6 w-6 text-info-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-medium text-gray-900">
-                  {{ title }}
-                </p>
-                <p class="mt-1 text-sm text-gray-500" v-if="msg">
-                  {{ msg }}
-                </p>
-              </div>
-              <div class="ml-4 flex-shrink-0 flex">
-                <!-- 
-                  class="bg-white rounded-md inline-flex text-gray-300 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                -->
-                <button
-                  v-if="closeBtn"
-                  @click="closeToast"
-                  class="bg-white rounded-md inline-flex text-gray-300 hover:text-gray-400"
-                >
-                  <span class="sr-only">Close</span>
-                  <XMarkIcon class="h-5 w-5" aria-hidden="true" />
-                </button>
-              </div>
+              <!-- <CheckCircleIcon
+                v-if="type == 'success'"
+                class="h-6 w-6 text-green-400"
+                aria-hidden="true"
+              />
+              <XCircleIcon
+                v-if="type == 'error'"
+                class="h-6 w-6 text-danger-400"
+                aria-hidden="true"
+              />
+               <ExclamationCircleIcon
+                v-if="type == 'warning'"
+                class="h-6 w-6 text-warning-400"
+                aria-hidden="true"
+              /> 
+              <InformationCircleIcon
+                v-if="type == 'info'"
+                class="h-6 w-6 text-info-400"
+                aria-hidden="true"
+              /> -->              
+              <UIcon 
+                v-if="type == 'success'"
+                name="i-heroicons-check-circle-16-solid" 
+                class="h-6 w-6 text-green-500"
+                aria-hidden="true"
+              />
+              <UIcon 
+                v-if="type == 'error'"
+                name="i-heroicons-check-circle-16-solid" 
+                class="h-6 w-6 text-red-500"
+                aria-hidden="true"
+              />
+              <UIcon 
+                v-if="type == 'warning'"
+                name="i-heroicons-exclamation-triangle-20-solid" 
+                class="h-6 w-6"
+                style="color:#FACC15"
+                aria-hidden="true"
+              />
+              <UIcon 
+                v-if="type == 'info'"
+                name="i-heroicons-exclamation-triangle-20-solid" 
+                class="h-6 w-6 text-blue-500"
+                aria-hidden="true"
+              />
+
+            </div>
+            <div class="flex flex-col justify-center items-start gap-1">
+              <p class="text-sm font-bold text-gray-900">
+                {{ title }}
+              </p>
+              <p class="text-sm font-medium text-gray-900">
+                {{ msg }}
+              </p>
             </div>
           </div>
+          <div class="flex items-start">
+              <!-- 
+                class="bg-white rounded-md inline-flex text-gray-300 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              -->
+              <button
+                v-if="closeBtn"
+                @click="closeToast"
+                class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500"
+              >
+                <span class="sr-only">Close</span>
+                <XMarkIcon class="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
         </div>
       </transition>
     </div>
@@ -99,15 +124,15 @@ const closeToast = () => {
 const typeBorder = computed(() => {
   switch (type.value) {
     case "success":
-      return "ring-4 ring-success-300 ring-opacity-50";
+      return "border radius-md border-gray-300";
     case "info":
-      return "ring-4 ring-info-300 ring-opacity-50";
+      return "border radius-md border-gray-300";
     case "warning":
-      return "ring-4 ring-warning-300 ring-opacity-50";
+      return "border radius-md border-gray-300";
     case "error":
-      return "ring-4 ring-danger-300 ring-opacity-50";
+      return "border radius-md border-gray-300";
     default:
-      return "ring-4 ring-gray-200 ring-opacity-30";
+      return "border radius-md border-gray-300";
   }
 });
 </script>

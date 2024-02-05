@@ -1,18 +1,20 @@
 <template>
-  <div class="w-60">
-    <nav class="mx-auto flex max-w-7xl font-sans" aria-label="Global">
-      <div class="w-full h-screen" style="" @mouseover="changeBg(true)" @mouseout="changeBg(false)">
-        <div :class="`flex justify-center gap-8 items-center ${headerBg} mr-2`">
-        <div :class="`flex justify-center py-6 gap-1 items-center ${headerBg}`">
-          <UIcon class="h-10 w-10 text-gray-400" name="i-heroicons-user-circle-16-solid" dynamic/>
-          <div>
-            <div class="text-base font-semibold">채진호</div>
-            <div class="pl-1 text-xs text-gray-500 font-light">admin</div>
-          </div>
+  <div>
+    <nav class="mx-auto flex font-sans" aria-label="Global">
+      <div class="flex flex-col w-full h-screen p-4 bg-white gap-4 border-r border-gray-300" style="width: 236px;" @mouseover="changeBg(true)" @mouseout="changeBg(false)">
+        <div :class="`flex justify-center items-center h-12 px-4`">
+          <span class="font-bold text-2xl leading-8">
+            안성종합물류
+          </span>
         </div>
+        <div :class="`w-full flex justify-center py-3 px-2 gap-3 items-center`">
+            <UIcon class="h-9 w-9 text-gray-400" name="i-heroicons-user-circle-16-solid" dynamic/>
+            <div class="flex justify-center items-start flex-col" style="flex: 1 0 0;">
+              <div class="text-base font-semibold">채진호</div>
+              <div class="text-xs font-normal">admin</div>
+            </div>
           <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }" :popper="{ placement: 'bottom-start' }">
-            <UIcon class="h-5 w-5 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-material-symbols-settings" dynamic/>
-
+            <UIcon class="h-6 w-6 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-heroicons-cog-6-tooth" dynamic/>
             <template #account="{ item }">
               <div class="text-left">
                 <p class="truncate font-medium text-gray-900 dark:text-white">
@@ -27,31 +29,53 @@
             </template>
           </UDropdown>                 
         </div>
-        <div class="pt-6 flow-root overflow-y-hidden hover:overflow-y-scroll scrollBar" style="height: calc(100vh - 88px)">
-          <div class="-my-6 divide-y divide-gray-500/10" >
-            <div v-for="(menu, i) in menus" :key="i" class="space-y-2 py-1 px-2 overflow-y-auto">
+        <div :class="['py-3 border-t border-gray-300 flow-root overflow-y-hidden hover:overflow-y-scroll scrollBar']" style="height: calc(100vh - 250px); flex: 1 0 0;"
+        >
+          <div class="flex flex-col items-start gap-1 w-full" >
+            <div v-for="(menu, i) in menus" :key="i" :class="['overflow-y-auto w-full']">
               <Disclosure as="div" class="" v-slot="{ open }">
                 <DisclosureButton 
-                  class="flex w-full items-center justify-between py-1 pl -2 rounded-sm text-sm font-semibold leading-0 text-gray-900 hover:bg-slate-200"
+                  :class="['flex p-2 items-center gap-3 w-full self-stretch rounded-sm hover:bg-gray-100',
+                  open ? '' : ''
+                  ]"
+                  style="border: radius 4px;"
                 >
-                <div class="flex items-center justify-between">
-                  <component :is="products[i].icon" class="mr-2 h-6 w-6 text-gray-600 group-hover:text-indigo-600" aria-hidden="true" />                
+                <UIcon :name="`${products[i].icon}`" :class="['h-6 w-6 text-gray-400', 
+                  open ? '' : ''
+                  ]" dynamic
+                />
+                <div class="text-sm font-semibold leading-5 text-left" style="flex:1 0 0;">
                   {{ menu.name }}
                 </div>
-                  <ChevronDownIcon :class="[open ? 'rotate-180' : '', 'h-5 w-5 flex-none']" aria-hidden="true" />
+                <ChevronDownIcon :class="['text-gray-400', open ? 'rotate-180 ' : '', 'h-5 w-5 flex-none']" aria-hidden="true" />
                 </DisclosureButton>
-                <DisclosurePanel class="mt-2 space-y-2" v-if="menu.subs.length > 0">
-                  <DisclosureButton 
-                    v-for="item in menu.subs" 
-                    :key="item.MENU_SEQ" 
-                    as="a" 
-                    :href="item.href" 
-                    class="block rounded-md py-0 pl-6 pr-1 text-sm font-base leading-7 text-gray-900 hover:bg-slate-200"
-                  >
-                    {{ item.SUBMENU_NM }}
-                  </DisclosureButton>
+                <transition
+                  enter="transform transition duration-85"
+                  enter-active-class="transition duration-100 ease-out"
+                  enter-from-class="transform scale-95 opacity-0"
+                  enter-to-class="transform scale-100 opacity-100"
+                  leave-active-class="transition duration-75 ease-out"
+                  leave-from-class="transform scale-100 opacity-100"
+                  leave-to-class="transform scale-95 opacity-0"
+                >
+                <DisclosurePanel class="mt-1 flex items-start gap-2 w-full" v-if="menu.subs.length > 0">
+                  <div class="flex flex-col justify-items-start" style="width: 18px;"></div>
+                  <div class="w-full flex flex-col gap-1 border-l border-gray-300">
+                    <DisclosureButton 
+                      v-for="item in menu.subs" 
+                      :key="item.MENU_SEQ" 
+                      as="a" 
+                      :href="item.href" 
+                      class="flex items-center ml-1 px-4 py-2.5 gap-3 text-sm font-semibold text-gray-900 hover:bg-gray-100 hover:text-primary"
+                      style="border-radius: 4px; width: calc(100% - 4px);"
+                    >
+                      {{ item.SUBMENU_NM }}
+                    </DisclosureButton>
+                  </div>
+
                 </DisclosurePanel>
-              </Disclosure>
+                </transition>
+              </Disclosure>              
             </div>
           </div>
         </div>
@@ -98,13 +122,15 @@ const { authenticated } = storeToRefs(useAuthStore()); // make authenticated sta
 
 const headerBg = ref('bg-slate-100')
 
+
+
 const products = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: HeartIcon },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
-  { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
-  { name: 'Security', description: 'Your customers’ data will be safe and secure', href: '#', icon: FingerPrintIcon },
-  { name: 'Integrations', description: 'Connect with third-party tools', href: '#', icon: SquaresPlusIcon },
-  { name: 'Automations', description: 'Build strategic funnels that will convert', href: '#', icon: ArrowPathIcon },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-star' },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-document-text' },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-arrow-left-end-on-rectangle' },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-arrow-right-start-on-rectangle' },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-squares-2x2' },
+  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-chart-bar-square' },
 ]
 const callsToAction = [
   { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
@@ -118,9 +144,9 @@ const logout = () => {
 
 const changeBg = (e: any) => {
 if(e) {
-  headerBg.value = 'bg-slate-200'
+  headerBg.value = 'bg-gray-200'
 } else {
-  headerBg.value = 'bg-slate-100'
+  headerBg.value = 'bg-gray-200'
 }
 }
 
@@ -172,6 +198,7 @@ function returnModalRtn(rtnVal: any) {
 
 </script>
 <style scoped>
+
 .scrollBar::-webkit-scrollbar {
     width: 0px;  /* 스크롤바의 너비 */
 }

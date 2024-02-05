@@ -253,7 +253,7 @@ const initPrt = () => {
 /* call Toast Popup */
 const initToast = () => {
   const Toast = useToastPopup();
-  Toast.actToast("test title", "test msg", "info", false, true);
+  Toast.actToast("검색어가 누락되었습니다", "1~20자의 검색어를 입력해주세요", "error", false, true);
 };
 
 const initDialog = (

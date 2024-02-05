@@ -177,63 +177,93 @@ const initApiGetCall = async () => {
 
 <template>
   <UContainer class="">
-  <UCard class="relative rounded-none px-8">
-    <div class="flex items-center justify-between w-full relative  h-16">
-      <div class="text-3xl font-bold text-primary w-1/3" style="line-height: 42px;">
+  <UCard class="mb-0 p-0.5 relative">
+    <div class="flex items-center justify-between w-full relative">
+      <div class="text-3xl font-semibold text-blue-900 w-1/3">
         피킹수동할당
       </div>
       <div class="gap-2 flex relative items-center">
-        <FormsLabel :line="'통합검색'"></FormsLabel>
         <UInput 
           v-model="q" 
           @keydown="page = 1"
           color="gray" variant="outline"
-          placeholder=""
-          class="text-gray-700 hover:bg-gray-100 rounded-md " 
+          placeholder="Filter tableItems..." 
+          class="text-gray-700 hover:bg-gray-100 rounded-md border-gray-700" 
         />
         <UButton 
-          icon="i-heroicons-magnifying-glass" 
-          class="hover:bg-indigo-400 rounded-md" 
-          variant="solid"
-          @click="isOpen = true"
-        >
-          조회
-        </UButton>        
-        <UButton 
-          icon="i-mdi-microsoft-excel"
-          color="white"
-          class=" text-gray-900 border-gray-500 hover:bg-gray-100 rounded-md" 
-          variant="solid"
+          icon="i-mdi-microsoft-excel" 
+          class="text-gray-700 hover:bg-gray-100 rounded-md" 
+          variant="outline"
           @click="downloadExcel"
         >
-          저장
+          Excel
+        </UButton>
+        <UButton 
+          icon="i-heroicons-document-magnifying-glass" 
+          class="text-gray-700 hover:bg-gray-100 rounded-md" 
+          variant="outline"
+          @click="isOpen = true"
+        >
+          Filter
         </UButton>
       </div>
     </div>
   </UCard>
-  <div class="flex w-full px-4 py-3 items-start" style="flex: 1 0 0">
-    <div class="flex gap-4 items-start" style="flex: 1 0 0;width: calc(100vw - 272px);">
-      <div class="w-1/2">
-        <FormsTable
-          v-model="selected" 
-          :rows="filteredRows" 
-          :columns="columns"
-          :search-tabs="searchTabs"
-          class="hideBar"
-          style="max-height: calc(100vh - 110px);"
-        />
-      </div>
-      <div class="w-1/2">
-        <FormsTable
-          v-model="selected" 
-          :rows="filteredRows" 
-          :columns="columns"
-          :search-tabs="searchTabs"
-          class="hideBar"
-          style="max-height: calc(100vh - 110px);"
-        />
+  <div>
+    <div class="border-b border-b-gray-200 mb-2">
+      <ul class="-mb-px flex items-center gap-4 text-sm font-medium" >
+        <li 
+          v-for="item in tabItems" 
+          :key="item.id"
+        >
+          <button
+            @click="selectTab(item)"
+            :class="[
+              'px-8',
+              selectedTab.id === item.id ?
+              'relative flex items-center justify-center gap-2 px-1 py-3 text-blue-700 after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-full after:bg-blue-700'
+              :
+              'flex items-center justify-center text-gray-500 px-1 py-3'
+            ]"
+          >
+            {{ item.name }}
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="slide-container">
+      <div class="container">
+        <div class="inner">
+          <div class=" flex gap-2">
+            <FormsTable
+              v-model="selected" 
+              :rows="filteredRows" 
+              :columns="columns"
+              :search-tabs="searchTabs"
+              class="scrollBar"
+              style="height: calc(100vh - 160px);"
+            />
+            <FormsTable
+              v-model="selected" 
+              :rows="filteredRows" 
+              :columns="columns"
+              :search-tabs="searchTabs"
+              class="scrollBar"
+              style="height: calc(100vh - 160px);"
+            />
+          </div>
+
+        </div>
+        <div class="inner">
+          <ChartBar
+            :chartData="chartData"
+            style="height: 100%;"
+            class="bg-slate-50 rounded"
+          />
+        </div>
       </div>
     </div>
+
   </div>
   <TransitionRoot appear :show="isOpen" >
     <Dialog class="relative z-10">
@@ -325,8 +355,22 @@ const initApiGetCall = async () => {
 </template>
 
 <style scoped>
+/* 슬라이드 컨테이너 스타일 */
+.slide-container {
+  width: calc(100vw - 256px);
+  overflow: hidden;
+}
+.container {
+  display: flex;
+  width: calc(100vw - 256px);
+}
 
-.i-mdi-microsoft-excel {
-  color: #9CA3AF !important;
+.container .inner div {
+  width: calc(100vw - 256px);
+  font-size: 4rem;
+  transition-property: transform;
+  transition-duration: 1s;
+  text-align: left;
+  transition-timing-function: ease-in-out;
 }
 </style>

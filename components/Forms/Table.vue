@@ -1,28 +1,33 @@
 <template>
-  <div :class="ui.wrapper" id="infinite-table">
-    <table :class="[ui.base, ui.divide]">
+  <div :class="[ui.wrapper, ' border border-gray-200 rounded-t-lg']" id="infinite-table" style="box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);">
+    <table :class="[ui.base, ui.divide]" >
       <thead :class="ui.thead" style="z-index: 9">
         <tr :class="ui.tr.base">
-          <th v-if="modelValue" scope="col" class="ps-4">
-            <UCheckbox :checked="indeterminate || selected.length === rows.length" :indeterminate="indeterminate" @change="selected = $event.target.checked ? rows : []" />
+          <th v-if="modelValue" scope="col" :class="[ui.th.checkbox]">
+            <UCheckbox 
+              :checked="indeterminate || selected.length === rows.length" 
+              :indeterminate="indeterminate" 
+              @change="selected = $event.target.checked ? rows : []" 
+            />
           </th>
 
           <th 
             v-for="(column, index) in columns" 
             :key="index" scope="col" 
-            :class="[ui.th.base, ui.th.padding, ui.th.color, ui.th.font, ui.th.size, column.classNames]"
+            :class="[ui.th.base, ui.th.padding, ui.th.color, ui.th.font, ui.th.size, column.classNames, index != 0 ? 'border-l border-gray-200' : '']"
           >
             <slot :name="`${column.key}-header`" :column="column" :sort="sort" :on-sort="onSort">
+                <!-- <UIcon class="h-6 w-6 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-custom-arrow-left" dynamic/> -->
               <UButton
                 v-if="column.sortable"
                 v-bind="{ ...ui.default.sortButton, ...sortButton }"
                 :icon="(!sort.column || sort.column !== column.key) ? (sortButton.icon || ui.default.sortButton.icon) : sort.direction === 'asc' ? sortAscIcon : sortDescIcon"
                 :label="column[columnAttribute]"
                 @click="onSort(column)"
-                :class="[searchTabs.filter(e => e == column.label).length > 0 ? 
+                :class="['p-0', searchTabs.filter(e => e == column.label).length > 0 ? 
                   'text-primary hover:text-primary'
                   :
-                  '' ]"
+                  '']"
               />
               <span v-else>{{ column[columnAttribute] }}</span>
             </slot>
@@ -31,7 +36,7 @@
       </thead>
       <tbody :class="ui.tbody">
         <tr v-for="(row, index) in rows" :key="index" :class="[ui.tr.base, isSelected(row) && ui.tr.selected]">
-          <td v-if="modelValue" class="ps-4">
+          <td v-if="modelValue" :class="[ui.th.checkbox]">
             <UCheckbox v-model="selected" :value="row" />
           </td>
 
@@ -90,27 +95,26 @@ function defaultComparator<T> (a: T, z: T): boolean {
 }
 
 setTimeout(() => {
+  const divTable = document.querySelector("#infinite-table");
+  const table = divTable.getElementsByTagName("tbody")[0];
 
-const divTable = document.querySelector("#infinite-table");
-const table = divTable.getElementsByTagName("tbody")[0];
+  const loadMore = () => {
+      let row = table.insertRow(-1);
+      row.insertCell(0).innerHTML = '123';
+  };
 
-const loadMore = () => {
-    let row = table.insertRow(-1);
-    row.insertCell(0).innerHTML = '123';
-};
-
-let timer: any;
-divTable.addEventListener("scroll", () => {
-   if (timer) {   
-      clearTimeout(timer); 
-  }
-  timer = setTimeout(() => {
-      const scrollValue = Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop);
-      if (Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop) < 1) {
-        loadMore()
-      }          
-  }, 300);
-})
+  let timer: any;
+  divTable.addEventListener("scroll", () => {
+    if (timer) {   
+        clearTimeout(timer); 
+    }
+    timer = setTimeout(() => {
+        const scrollValue = Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop);
+        if (Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop) < 1) {
+          // loadMore()
+        }          
+    }, 300);
+  })
 }, 2000);
   
 export default defineComponent({
@@ -180,7 +184,7 @@ export default defineComponent({
 
     const ui: any = computed<Partial<typeof appConfig.ui.table>>(() => defu({}, props.ui, appConfig.ui.table))
     const columns = computed(() => props.columns ?? Object.keys(props.rows[0] ?? {}).map((key) => ({ key, label: capitalize(key), sortable: false })))
-
+      console.log(appConfig.ui.table)
     const sort = ref(defu({}, props.sort, { column: null, direction: 'asc' }))
 
     const rows = computed(() => {

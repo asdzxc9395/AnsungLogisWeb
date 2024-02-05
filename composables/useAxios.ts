@@ -68,6 +68,7 @@ export const callGet = async (data: object, url: string) => {
       // todo:: redirect-error page
       return err.response || err;
     });
+    console.log(rtn)
   return rtn;
 };
 

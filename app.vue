@@ -13,7 +13,7 @@ useHead({
 <template>
   <NuxtLayout>
     <NuxtPage
-      class="sm:px-4 py-4 md:px-4 py-4 lg:px-4 py-4 max-w-full flex-auto"
+      class="sm:px-0 py-0 md:px-0 py-0 lg:px-0 py-0 max-w-full flex-auto"
     />
     <DialogToastpopup />
   </NuxtLayout>
