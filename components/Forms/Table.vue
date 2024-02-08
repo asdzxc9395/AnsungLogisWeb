@@ -1,5 +1,5 @@
 <template>
-  <div :class="[ui.wrapper, ' border border-gray-200 rounded-t-lg']" id="infinite-table" style="box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);">
+  <div :class="[ui.wrapper, 'rounded-t-lg']" id="infinite-table" style="">
     <table :class="[ui.base, ui.divide]" >
       <thead :class="ui.thead" style="z-index: 9">
         <tr :class="ui.tr.base">
@@ -96,7 +96,7 @@ function defaultComparator<T> (a: T, z: T): boolean {
 
 setTimeout(() => {
   const divTable = document.querySelector("#infinite-table");
-  const table = divTable.getElementsByTagName("tbody")[0];
+  const table = divTable ? divTable.getElementsByTagName("tbody")[0] : null
 
   const loadMore = () => {
       let row = table.insertRow(-1);
@@ -104,17 +104,19 @@ setTimeout(() => {
   };
 
   let timer: any;
-  divTable.addEventListener("scroll", () => {
-    if (timer) {   
-        clearTimeout(timer); 
-    }
-    timer = setTimeout(() => {
-        const scrollValue = Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop);
-        if (Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop) < 1) {
-          // loadMore()
-        }          
-    }, 300);
-  })
+  if(divTable) {
+    divTable.addEventListener("scroll", () => {
+      if (timer) {   
+          clearTimeout(timer); 
+      }
+      timer = setTimeout(() => {
+          const scrollValue = Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop);
+          if (Math.abs(divTable.scrollHeight - divTable.clientHeight - divTable.scrollTop) < 1) {
+            // loadMore()
+          }          
+      }, 300);
+    })
+  }
 }, 2000);
   
 export default defineComponent({
@@ -184,7 +186,6 @@ export default defineComponent({
 
     const ui: any = computed<Partial<typeof appConfig.ui.table>>(() => defu({}, props.ui, appConfig.ui.table))
     const columns = computed(() => props.columns ?? Object.keys(props.rows[0] ?? {}).map((key) => ({ key, label: capitalize(key), sortable: false })))
-      console.log(appConfig.ui.table)
     const sort = ref(defu({}, props.sort, { column: null, direction: 'asc' }))
 
     const rows = computed(() => {

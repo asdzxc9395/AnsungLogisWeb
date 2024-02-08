@@ -23,6 +23,11 @@ export default defineAppConfig({
       },
     }, 
     input: {
+      wrapper: "relative",
+      base: "relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0 h-9",
+      form: "form-input",
+      rounded: "rounded-md",
+      placeholder: "placeholder-gray-400 dark:placeholder-gray-500",      
       default: {
         size: "md",
         color: "white",
@@ -39,10 +44,10 @@ export default defineAppConfig({
       },      
       color: {
         white: {
-          outline: "shadow-sm bg-white dark:bg-white text-gray-900 dark:text-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-300 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+          outline: "bg-white dark:bg-white text-gray-900 dark:text-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-300 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
         },
         gray: {
-          outline: "shadow-sm bg-gray-50 dark:bg-gray-50 text-gray-900 dark:text-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-300 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
+          outline: "bg-gray-50 dark:bg-gray-50 text-gray-900 dark:text-gray-900 ring-1 ring-inset ring-gray-300 dark:ring-gray-300 focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400"
         }
       },
       // "variant": {
@@ -100,7 +105,7 @@ export default defineAppConfig({
         active: "hover:bg-white dark:hover:bg-gray-800/50 cursor-pointer"
       },
       th: {
-        base: "sticky top-0 text-left rtl:text-right",
+        base: "sticky top-0 text-left rtl:text-right whitespace-nowrap",
         padding: "pl-2 pr-2 py-2",
         checkbox: "pl-3 pr-4 py-2",
         color: "text-gray-900 dark:text-white",
@@ -150,8 +155,8 @@ export default defineAppConfig({
       },        
     },    
     button: {
-      // "base": "focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0",
-      // "font": "font-medium",
+      base: "flex justify-center focus:outline-none focus-visible:outline-0 disabled:cursor-not-allowed disabled:opacity-75 flex-shrink-0",
+      font: "font-bold",
       // "rounded": "rounded-md",
       // "truncate": "text-left break-all line-clamp-1",
       // "block": "w-full flex justify-center items-center",
@@ -172,14 +177,14 @@ export default defineAppConfig({
       //   "lg": "gap-x-2.5",
       //   "xl": "gap-x-2.5"
       // },
-      // "padding": {
-      //   "2xs": "px-2 py-1",
-      //   "xs": "px-2.5 py-1.5",
-      //   "sm": "px-2.5 py-1.5",
-      //   "md": "px-3 py-2",
-      //   "lg": "px-3.5 py-2.5",
-      //   "xl": "px-3.5 py-2.5"
-      // },
+      padding: {
+        // "2xs": "px-2 py-1",
+        // "xs": "px-2.5 py-1.5",
+        // "sm": "px-2.5 py-1.5",
+        md: "px-2.5 py-2 md-Btn",
+        // "lg": "px-3.5 py-2.5",
+        // "xl": "px-3.5 py-2.5"
+      },
       // "square": {
       //   "2xs": "p-1",
       //   "xs": "p-1.5",
@@ -228,8 +233,33 @@ export default defineAppConfig({
           color: "primary",
           loadingIcon: "i-heroicons-arrow-path-20-solid"
         }
-    }
+    },
+    formGroup: {
+      wrapper: '',
+      label: {
+        wrapper: 'flex content-center items-center justify-between',
+        base: 'block font-medium text-gray-700 dark:text-gray-200',
+        required: "after:content-['*'] after:ms-0.5 after:text-red-500 dark:after:text-red-400",
+      },
+      size: {
+        '2xs': 'text-xs',
+        xs: 'text-xs',
+        sm: 'text-sm',
+        md: 'text-sm',
+        lg: 'text-sm',
+        xl: 'text-base',
+      },
+      container: 'mt-0 relative w-full',
+      description: 'text-gray-500 dark:text-gray-400',
+      hint: 'text-gray-500 dark:text-gray-400',
+      help: 'mt-2 text-gray-500 dark:text-gray-400',
+      error: 'mt-2 text-red-500 dark:text-red-400',
+      default: {
+        size: 'sm',
+      },
+    },
     // select: {
+    //   base: "relative block w-full disabled:cursor-not-allowed disabled:opacity-75 focus:outline-none border-0",
     //   default: {
     //     loadingIcon: 'i-octicon-sync-24',
     //     trailingIcon: 'i-octicon-chevron-down-24'

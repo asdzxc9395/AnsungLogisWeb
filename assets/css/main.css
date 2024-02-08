@@ -73,6 +73,12 @@ div#__nuxt {
     width: 3px;
 }
 
+
+@media (min-width: 1024px) {
+    .md-Btn {
+        min-width: 96px;
+    }
+}
 /* Table */
 
 /* hover animation */

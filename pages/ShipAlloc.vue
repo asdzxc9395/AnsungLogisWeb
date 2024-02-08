@@ -13,8 +13,6 @@ import * as testApi from "~/api/testApi";
 import { useUserStore } from '~/store/user'; // import the auth store we just created
 
 const { setLog, getSearchList } = useUserStore();
-const app = useNuxtApp()
-app.callHook('page:start')
 // Modal
 const isOpen = ref(false)
 
@@ -54,7 +52,19 @@ const columns = [{
   label: 'pcsWorkQty',
   sortable: true
 }]
+const countries = [{
+  name: 'United States',
+  value: 'US'
+}, {
+  name: 'Canada',
+  value: 'CA',
+  disabled: true
+}, {
+  name: 'Mexico',
+  value: 'MX'
+}]
 
+const country = ref('CA')
 const tableItems = ref([])
 const selected = ref([])
 const page = ref(1)
@@ -92,6 +102,18 @@ const filteredRows = computed(() => {
   pageLength.value = filteredPeople.length;
   return filteredPeople;
 });
+
+
+const tagList = computed(() => {
+  return tagItems.value.map(
+    (items, index) => ({
+      ...items,
+      index: index + 1
+    }))
+})
+const tagItems = ref([])
+const tagVal = ref('')
+  
 const tabItems = [{
   id: 1,
   name: 'Overview',
@@ -187,7 +209,7 @@ const initApiGetCall = async () => {
         <UInput 
           v-model="q" 
           @keydown="page = 1"
-          color="gray" variant="outline"
+          color="white" variant="outline"
           placeholder=""
           class="text-gray-700 hover:bg-gray-100 rounded-md " 
         />
@@ -212,30 +234,117 @@ const initApiGetCall = async () => {
     </div>
   </UCard>
   <div class="flex w-full px-4 py-3 items-start" style="flex: 1 0 0">
-    <div class="flex gap-4 items-start" style="flex: 1 0 0;width: calc(100vw - 272px);">
-      <div class="w-1/2">
+    <div class="flex w-full gap-4 items-start" style="flex: 1 0 0;width: calc(100vw - 272px);">
+      <div class="w-1/2 rounded-lg border border-gray-200" style="box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);">
         <FormsTable
           v-model="selected" 
           :rows="filteredRows" 
           :columns="columns"
           :search-tabs="searchTabs"
           class="hideBar"
-          style="max-height: calc(100vh - 110px);"
+          style="max-height: calc(100vh - 200px);"
         />
+        <div class="flex px-6 py-2 gap-2 flex-col justify-center items-end border-t border-gray-200 bg-white rounded-b-lg">
+          <div class="flex items-center lg:justify-end sm:max-lg:w-full">
+            <div class="flex items-center gap-3" style="flex: 1 0 0;">
+              <div class="w-8/12 flex items-center gap-2" style="flex: 1 0 0;">
+                <FormsLabel :line="'제품명'"></FormsLabel>
+                <UInput 
+                  color="white" variant="outline"
+                  placeholder=""
+                  size="md"
+                  class="text-gray-700 hover:bg-gray-100 rounded-md w-full" 
+                />
+              </div>
+              <div class="w-4/12 flex items-center gap-2">
+                <FormsLabel :line="'팔레트'"></FormsLabel>
+                <UInput 
+                  color="white" variant="outline"
+                  placeholder=""
+                  class="text-gray-700 hover:bg-gray-100 rounded-md w-full" 
+                />
+              </div>
+            </div>
+            <div class="flex items-start pl-4 gap-3 mr-2">
+              <FormsLabel :line="'외 3건'"></FormsLabel>
+            </div>
+          </div>
+          <div class="flex items-center justify-end">
+            <div class="w-full flex items-center gap-3" style="flex: 1 0 0;">
+              <div class="w-6/12 flex items-center gap-2 justify-end" style="flex: 1 0 0;">
+                <FormsLabel :line="'제조국'"></FormsLabel>
+                <USelect v-model="country" :options="countries" option-attribute="name" />
+              </div>
+              <div class="w-3/12 flex items-center gap-2" style="flex: 1 0 0;">
+                <FormsLabel :line="'제조주차'"></FormsLabel>
+                <UInput 
+                  color="white" variant="outline"
+                  placeholder=""
+                  class="text-gray-700 hover:bg-gray-100 rounded-md w-full" 
+                />
+              </div>
+              <div class="w-3/12 flex items-center gap-2" style="flex: 1 0 0;">
+                <FormsLabel :line="'입고수량'"></FormsLabel>
+                <UInput 
+                  color="white" variant="outline"
+                  placeholder=""
+                  class="text-gray-700 hover:bg-gray-100 rounded-md w-full" 
+                />
+              </div>
+            </div>
+            <div class="flex items-start pl-4 gap-3">
+              <UButton 
+                color="white"
+                class=" text-gray-900 border-gray-500 hover:bg-gray-100 rounded-md" 
+                variant="solid"
+              >
+                등록
+              </UButton>              
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="w-1/2">
+      <div class="w-1/2 rounded-lg border border-gray-200" style="box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.10), 0px 1px 2px -1px rgba(0, 0, 0, 0.10);">
         <FormsTable
           v-model="selected" 
           :rows="filteredRows" 
           :columns="columns"
           :search-tabs="searchTabs"
           class="hideBar"
-          style="max-height: calc(100vh - 110px);"
+          style="max-height: calc(100vh - 200px);"
         />
+        <div class="flex px-6 py-2 gap-2 justify-center items-end border-t border-gray-200 bg-white rounded-b-lg">
+          <div class="flex items-center justify-start" style="flex: 1 0 0;">
+            <UButton 
+              color="white"
+              class=" text-gray-900 border-gray-500 hover:bg-gray-100 rounded-md" 
+              variant="solid"
+            >
+              삭제
+            </UButton>               
+          </div>
+          <div class="flex items-center justify-end gap-3">
+            <FormsLabel :line="'로케이션'"></FormsLabel>
+            <UInput 
+              color="white" variant="outline"
+              placeholder=""
+              class="text-gray-700 hover:bg-gray-100 rounded-md w-full" 
+            />
+          </div>
+          <div class="flex items-start pl-4 gap-3">
+            <UButton 
+              color="white"
+              class=" text-gray-900 border-gray-500 hover:bg-gray-100 rounded-md" 
+              variant="solid"
+            >
+              적치
+            </UButton>              
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <TransitionRoot appear :show="isOpen" >
+  <TransitionRoot :show="isOpen" >
     <Dialog class="relative z-10">
       <TransitionChild
         enter="duration-300 ease-out"
@@ -260,43 +369,49 @@ const initApiGetCall = async () => {
             leave-from="opacity-100 scale-100"
             leave-to="opacity-0 scale-95"
           >
-            <!-- <DialogPanel
-              class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all divide-y divide-gray-500"
-            > -->
+            <!-- dialogPanel css: calendar-height  추가할지말지 -->
             <DialogPanel
-              class="w-full p-2 calendar-height max-w-md transform shadow-none text-left align-middle transition-all divide-y divide-gray-300"
+              class="w-full max-w-md transform shadow-none text-left align-middle transition-all"
+              style="min-width: 435px;"
               >
               <DialogTitle
-                class="bg-white leading-6 rounded-t-lg p-3 shadow-right"
+                class="p-6 bg-white leading-6 rounded-t-lg shadow-right"
               >
-                <div class="text-2xl font-semibold text-blue-900 w-1/3">
+                <div class="text-xl font-bold gray-black-900 w-1/3">
                   조건 설정
                 </div>
               </DialogTitle>
-              <div class="pt-2 bg-white flex flex-col gap-2 p-3 shadow-right">
+              <div class="px-6 bg-white flex flex-col gap-2 shadow-right">
                 <div class="flex flex-row gap-2 items-center">
                   <FormsLabel :line="'입고일자'"></FormsLabel>
-                  <FormsDatePicker class="w-1/3" :datePicker="startDate" @change-date="value => startDate = value"/>
+                  <FormsDatePicker class="" :datePicker="startDate" @change-date="value => startDate = value"/>
                   <FormsLabel :line="'출고_일자'"></FormsLabel>
-                  <FormsDatePicker class="w-1/3" :datePicker="endDate" @change-date="value => endDate = value"/>
+                  <FormsDatePicker class="" :datePicker="endDate" @change-date="value => endDate = value"/>
                 </div>
                 <div class="flex flex-row gap-2 items-center">
                   <FormsLabel :line="'조회조건'"></FormsLabel>
                   <USelectMenu
-                    class="w-1/3"
-                    v-model="searchTabs" 
-                    :options="columns" 
-                    multiple
-                    placeholder="All Select" 
-                    value-attribute="label" 
-                    option-attribute="label"
+                  class=""
+                  v-model="searchTabs" 
+                  :options="columns" 
+                  multiple
+                  placeholder="All Select" 
+                  value-attribute="label" 
+                  option-attribute="label"
                   />
-                  <div></div>                 
+                  <FormsLabel :line="'태그추가'"></FormsLabel>
+                  <UInput 
+                    v-model="tagVal"
+                    @keyup.enter="tagItems.push({val: tagVal})"
+                    class=""
+                  ></UInput>
                 </div>
-
+                <div class="flex flex-row gap-2 items-center">
+                  <FormsSearchBadge :tagList="tagList" />
+                </div>
               </div>
 
-              <div class="pt-4 bg-white rounded-b-lg p-3 shadow-right">
+              <div class="p-6 bg-white rounded-b-lg shadow-right">
                 <div class="flex justify-end gap-2">
                   <UButton 
                     class="text-blue-900 hover:bg-blue-100 rounded-md" 

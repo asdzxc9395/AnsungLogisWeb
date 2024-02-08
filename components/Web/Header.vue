@@ -14,7 +14,7 @@
               <div class="text-xs font-normal">admin</div>
             </div>
           <UDropdown :items="items" :ui="{ item: { disabled: 'cursor-text select-text' } }" :popper="{ placement: 'bottom-start' }">
-            <UIcon class="h-6 w-6 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-heroicons-cog-6-tooth" dynamic/>
+            <on class="h-6 w-6 text-gray-400 hover:text-indigo-500 hover-change-animation" name="i-heroicons-cog-6-tooth" dynamic/>
             <template #account="{ item }">
               <div class="text-left">
                 <p class="truncate font-medium text-gray-900 dark:text-white">
@@ -81,7 +81,7 @@
         </div>
       </div>
     </nav>
-    <DialogTablepopup @modal-result-value-test="returnModalRtn" />
+    <DialogTablepopup :isOpen="isOpen"  @closeDialog="closeDialog" />
   </div>
 </template>
 
@@ -111,7 +111,6 @@ import { ChevronDownIcon, HeartIcon, PhoneIcon, PlayCircleIcon } from '@heroicon
 import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
 import { useAuthStore } from '~/store/auth'; // import the auth store we just created
 import { useUserStore } from '~/store/user'; // import the auth store we just created
-import { useDialogPopup } from "~/composables/useDialogPopup.js";
 
 const { menus } = defineProps(['menus']);
 // const menu = ref(menus)
@@ -119,22 +118,16 @@ const { menus } = defineProps(['menus']);
 const router = useRouter();
 const { logUserOut } = useAuthStore(); // use authenticateUser action from  auth store
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
-
 const headerBg = ref('bg-slate-100')
-
-
+const isOpen = ref(false);
 
 const products = [
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-star' },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-document-text' },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-arrow-left-end-on-rectangle' },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-arrow-right-start-on-rectangle' },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-squares-2x2' },
-  { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: 'i-heroicons-chart-bar-square' },
-]
-const callsToAction = [
-  { name: 'Watch demo', href: '#', icon: PlayCircleIcon },
-  { name: 'Contact sales', href: '#', icon: PhoneIcon },
+  {href: '', icon: 'i-heroicons-star' },
+  {href: '', icon: 'i-heroicons-document-text' },
+  {href: '', icon: 'i-heroicons-arrow-left-end-on-rectangle' },
+  {href: '', icon: 'i-heroicons-arrow-right-start-on-rectangle' },
+  {href: '', icon: 'i-heroicons-squares-2x2' },
+  {href: '', icon: 'i-heroicons-chart-bar-square' },
 ]
 
 const logout = () => {
@@ -162,7 +155,7 @@ const items = [
     label: '조회기록',
     icon: 'i-heroicons-clipboard-document-list',
     click: () => {
-      initDialog('default', 'popup Contents');
+      isOpen.value = true;
     }
   }], [{
     label: 'Logout',
@@ -172,28 +165,9 @@ const items = [
     }
   }]
 ]
-const initDialog = (
-  title: string,
-  data?: any,
-  btnType?: string,
-  width?: string,
-  height?: string,
-  closeBtn?: boolean
-) => {
-  const ModalDialog = useDialogPopup();
-  // const { getLog } = useUserStore(); // use authenticateUser action from  auth store
-  ModalDialog.actDialog(title, data, btnType, width, height, closeBtn);
-  // 기본적으로는 width, height, closeBtn을 재정의할 일이 없도록 처리할 예정,
-  // 통상 호출 : ModalDialog.actDialog(title, data, btnType)
-  console.log(
-    "after close인지 확인, ModalDialog.rtnValue:: ",
-    ModalDialog.rtnValue
-  );
-};
 
-function returnModalRtn(rtnVal: any) {
-  console.log("returnValue:: ", rtnVal);
-  return rtnVal;
+function closeDialog(e:any) {
+  isOpen.value = e
 }
 
 </script>

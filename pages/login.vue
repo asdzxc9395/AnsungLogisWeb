@@ -1,24 +1,30 @@
 <template>
   <NuxtLayout :name="'login'">
-    <UContainer :ui="{ constrained: 'max-w-sm' }">
-      <div class="py-10">
-        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-          <UFormGroup label="Email" name="email">
-            <UInput v-model="state.username" placeholder="1234"/>
+    <!-- <UContainer :ui="{ constrained: 'max-w-sm' }" > -->
+      <div class="flex flex-col justify-center items-center gap-10">
+        <div class="text-3xl font-bold" style="lign-height: 42px; text-overflow: ellipsis;">
+          <span>안성종합물류</span>
+        </div>        
+        <UForm :validate="validate" :state="state" class="flex flex-col justify-center items-start px-12 gap-3" @submit="onSubmit" >
+          <UFormGroup label="아이디" name="아이디" class="flex flex-col justify-center items-start text-sm font-medium gap-2 w-96">
+            <UInput v-model="state.username" placeholder="1234" class="w-full"/>
           </UFormGroup>
 
-          <UFormGroup label="Password" name="password">
-            <UInput v-model="state.password" type="password" />
+          <UFormGroup label="패스워드" name="패스워드" class="flex flex-col justify-center items-start text-sm font-medium gap-2 w-96">
+            <UInput v-model="state.password" type="password" class="w-full"/>
           </UFormGroup>
 
-          <UButton type="submit">
-            Submit
+          <div class="flex items-center gap-3">
+            <UCheckbox v-model="selected"/>
+            <span class="text-sm">아이디 저장</span>
+          </div>
+
+          <UButton type="submit" class="w-full">
+            로그인
           </UButton>
         </UForm>
       </div>
-      <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-    </div>      
-    </UContainer>
+    <!-- </UContainer> -->
   </NuxtLayout>
 </template>
 <script lang="ts" setup>
@@ -38,6 +44,7 @@ const { init }: any = useUserStore(); // use authenticateUser action from  auth 
 
 const router = useRouter();
 
+const selected = ref(false);
 const state = reactive({
   username: '1234',
   password: 'a'
